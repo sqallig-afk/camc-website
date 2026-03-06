@@ -1,0 +1,3139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAMC — Centre d'Analyses Médicales de Casablanca</title>
+    <meta name="theme-color" content="#0f4a61">
+    <link rel="icon" type="image/png" href="CAMC_logo_full_transparent_tight.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ══════════════════════════════════════
+           VARIABLES
+           ══════════════════════════════════════ */
+        :root {
+            --bg:#eef3f2;--bg-card:#fff;--bg-header:#0f4a61;
+            --text:#17363f;--text-mid:#4e6469;--text-muted:#73898d;--text-faint:#a5b2b3;
+            --accent:#1a556d;--accent-light:#e3eef1;--accent-glow:#1a556d22;
+            --green:#1a8a4a;--green-bg:#e4f7ed;
+            --border:#d8e2e3;--border-light:#e8eeef;--radius:10px;
+            --shadow-hover:0 6px 20px rgba(0,0,0,.08);
+            --c-chimie:#c8950f;--c-chimie-bg:#fdf5e0;
+            --c-hemato:#bf3030;--c-hemato-bg:#fde8e8;
+            --c-micro:#1a8a4a;--c-micro-bg:#e4f7ed;
+            --c-immuno:#7b35b0;--c-immuno-bg:#f1e6fa;
+            --c-hormo:#d4620a;--c-hormo-bg:#fef0e2;
+        }
+        /* ══════════ DARK MODE ══════════ */
+        [data-theme="dark"]{
+            --bg:#141e22;--bg-card:#1a272d;--bg-header:#0a2e3d;
+            --text:#d8e4e8;--text-mid:#9ab0b8;--text-muted:#708a92;--text-faint:#4a6068;
+            --accent:#4db8d4;--accent-light:#1a3340;--accent-glow:#4db8d422;
+            --green:#2ecc71;--green-bg:#1a3328;
+            --border:#2a3d44;--border-light:#223338;
+            --shadow-hover:0 6px 20px rgba(0,0,0,.3);
+            --c-chimie:#e8b230;--c-chimie-bg:#2e2510;
+            --c-hemato:#e05555;--c-hemato-bg:#2e1515;
+            --c-micro:#2ecc71;--c-micro-bg:#152e1f;
+            --c-immuno:#a855f7;--c-immuno-bg:#211530;
+            --c-hormo:#f09040;--c-hormo-bg:#2e1f10;
+        }
+        [data-theme="dark"] body{background:#111a1e}
+        [data-theme="dark"] .nav{background:rgba(24,34,40,.78);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-color:rgba(42,61,68,.5)}
+        [data-theme="dark"] .nav-link{color:#8fa8b0}
+        [data-theme="dark"] .nav-link.active{color:#4db8d4;background:#1a3340}
+        [data-theme="dark"] .lang-btn{background:#1a272d;color:#9ab0b8;border-color:#2a3d44}
+        [data-theme="dark"] .lang-btn.on{background:#1a6a82;color:#fff;border-color:#1a6a82}
+        [data-theme="dark"] .home-hero{background:linear-gradient(125deg,#162a34,#1a2e38);border-color:#2a3d44}
+        [data-theme="dark"] .home-highlight,.card,.resource-card,.practical-card,.home-path-card,.home-trust-item{background:var(--bg-card);border-color:var(--border)}
+        [data-theme="dark"] .modal{background:#1a272d}
+        [data-theme="dark"] .modal-head{background:#1a272d}
+        [data-theme="dark"] .search-bar{background:#182228;border-color:var(--border)}
+        [data-theme="dark"] .search-field input{background:var(--bg);color:var(--text);border-color:var(--border)}
+        [data-theme="dark"] .chip{background:var(--bg-card);color:var(--text-muted);border-color:var(--border)}
+        [data-theme="dark"] .view-toggle{background:var(--bg)}
+        [data-theme="dark"] .view-btn.active{background:var(--bg-card)}
+        [data-theme="dark"] .field{background:var(--bg)}
+        [data-theme="dark"] .close-btn{background:var(--bg)}
+        [data-theme="dark"] .news-dialog-card{background:#1a272d}
+        [data-theme="dark"] .news-dialog-head{background:#1a272d;border-color:var(--border)}
+        [data-theme="dark"] .home-search-input{background:#1a272d;color:var(--text);border-color:#2a3d44}
+        [data-theme="dark"] .home-trust{background:linear-gradient(135deg,#060f14,#0a1e28,#081820)}
+        [data-theme="dark"] footer{border-color:var(--border)}
+        [data-theme="dark"] .resource-btn{background:var(--bg-card);color:var(--text-mid);border-color:var(--border)}
+        [data-theme="dark"] .resource-btn.primary{background:#1a6a82;color:#fff;border-color:#1a6a82}
+        [data-theme="dark"] .pv-card{background:var(--bg)}
+        [data-theme="dark"] .pv-note{background:var(--accent-light);color:var(--accent)}
+        [data-theme="dark"] .fiche-dialog-frame iframe{border-color:#2a3d44;background:#111a1e}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'DM Sans',-apple-system,sans-serif;background:#f3f5f6;color:var(--text);line-height:1.6}
+        a{color:var(--accent);text-decoration:none}
+
+        /* ══════════ ANIMATIONS SCROLL ══════════ */
+        @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+        .reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}
+
+        /* ══════════ NAVBAR ══════════ */
+        .nav{background:rgba(245,246,247,.72);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);position:sticky;top:0;z-index:200;border-bottom:1px solid rgba(216,226,227,.5);box-shadow:0 1px 12px rgba(0,0,0,.04)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
+        .nav-logo{display:flex;align-items:center;cursor:pointer;flex-shrink:0}
+        .nav-mini{width:92px;height:auto;object-fit:contain;display:block}
+        .nav-links{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+        .nav-link{color:#6a6a6a;font-size:clamp(12px,1vw,16px);font-weight:800;padding:9px 14px;border-radius:12px;cursor:pointer;transition:.15s;text-transform:uppercase}
+        .nav-link.active{color:#2b7686;background:#dce5e8}
+        .nav-link:hover{background:#ebeff1}
+        .lang-switch{display:flex;align-items:center;gap:6px;margin-left:8px}
+        .lang-btn{height:34px;min-width:66px;padding:0 10px;border-radius:10px;border:1px solid #cfd9dd;background:#fff;color:#2a5160;font:700 12px 'DM Sans',sans-serif;cursor:pointer;transition:.15s}
+        .lang-btn.on{background:#1f6f85;color:#fff;border-color:#1f6f85}
+        .lang-btn:hover{filter:brightness(.98)}
+
+        /* ══════════ ACCUEIL ══════════ */
+        .site-page{display:none}
+        #home{display:block}
+        .home-wrap{max-width:1200px;margin:0 auto;padding:32px 24px 60px}
+        .home-logo-wrap{text-align:center;padding:8px 0 14px}
+        .home-logo{width:min(530px,82vw);height:auto}
+
+        .home-hero{margin-top:10px;background:linear-gradient(145deg,#e8f1f5,#f8fbfc,#eef6f3);border:1px solid #d8e4e9;border-radius:22px;padding:clamp(28px,3.5vw,48px) clamp(24px,3vw,44px);box-shadow:0 8px 30px rgba(16,60,80,.06)}
+        .home-hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:stretch}
+        /* ══════════ TAGLINE BANDEAU ══════════ */
+        .home-tagline{
+            width:100%;margin:-2px 0 22px;
+            background:linear-gradient(135deg,#0c3e52 0%,#0f4a61 40%,#16586e 100%);
+            padding:20px 24px;text-align:center;
+            box-shadow:0 4px 24px rgba(12,62,82,.22);
+            position:relative;overflow:hidden;
+        }
+        .home-tagline::before{
+            content:'';position:absolute;inset:0;
+            background:repeating-linear-gradient(90deg,transparent,transparent 140px,rgba(255,255,255,.015) 140px,rgba(255,255,255,.015) 280px);
+            pointer-events:none;
+        }
+        .home-tagline-main{
+            font-family:'DM Sans',sans-serif;
+            font-size:clamp(15px,1.6vw,26px);font-weight:300;color:rgba(255,255,255,.75);
+            letter-spacing:2px;line-height:1.4;text-transform:uppercase;
+        }
+        .home-tagline-main b{
+            font-weight:900;color:#fff;font-size:1.2em;letter-spacing:3px;
+        }
+        .home-tagline-dot{
+            display:inline-block;width:5px;height:5px;border-radius:50%;
+            background:rgba(255,255,255,.3);vertical-align:middle;margin:0 14px;
+        }
+        .home-tagline-rule{
+            width:50px;height:1.5px;margin:10px auto;border-radius:2px;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+        }
+        .home-tagline-since{
+            font-family:'DM Sans',sans-serif;
+            font-size:clamp(10px,.85vw,13px);font-weight:500;
+            color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:4px;
+        }
+        [data-theme="dark"] .home-tagline{
+            background:linear-gradient(135deg,#081e28 0%,#0a2e3d 40%,#0f3a4d 100%);
+            box-shadow:0 4px 24px rgba(0,0,0,.4);
+        }
+
+        .home-kicker{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#2a7489}
+        .home-main-title{margin-top:8px;font-size:clamp(28px,2.7vw,46px);line-height:1.04;color:#133b4b;font-weight:900}
+        .home-main-subtitle{margin-top:10px;font-size:clamp(16px,1.2vw,20px);line-height:1.5;color:#4d6168;max-width:760px}
+        .home-cta-row{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+        .comp-search-wrap{margin:0 auto;max-width:760px}
+        .home-input-wrap{position:relative}
+        .home-input-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:22px;height:22px;color:#9aa6ad}
+        .home-search-input{width:min(620px,90vw);height:58px;border:2px solid #c6d0d5;border-radius:18px;background:#f9fbfc;color:#212529;font:500 clamp(16px,1.2vw,24px) 'DM Sans',sans-serif;padding:0 54px 0 52px;outline:none}
+        .home-search-input:focus{border-color:#93acb5;box-shadow:0 0 0 4px #9fb7bf29;background:#fff}
+        .home-search-go{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:12px;border:0;background:#dce8ec;color:#1e6f85;display:grid;place-items:center;cursor:pointer}
+        .home-search-go:hover{background:#cde0e6}
+        .home-search-go svg{width:20px;height:20px}
+        .home-highlights{display:grid;grid-template-columns:1fr;gap:10px}
+        .home-highlight{background:#fff;border:1px solid #d6e2e7;border-radius:12px;padding:12px 14px}
+        .home-highlight h4{font-size:clamp(18px,1.4vw,24px);line-height:1.1;color:#1f5062;font-weight:900}
+        .home-highlight p{margin-top:4px;font-size:clamp(14px,1.02vw,17px);color:#51656c;line-height:1.45}
+        /* ══════════ CITATION DR SQALLI ══════════ */
+        .home-quote{
+            display:flex;align-items:center;gap:clamp(20px,3vw,40px);
+            background:linear-gradient(135deg,#f6fafb,#eef4f6);
+            border:1px solid #d4e2e7;border-radius:18px;
+            padding:clamp(20px,2.5vw,36px);margin-bottom:28px;
+            box-shadow:0 6px 20px rgba(15,74,97,.06);
+            position:relative;overflow:hidden;
+        }
+        .home-quote::before{
+            content:'';position:absolute;left:0;top:0;bottom:0;width:5px;
+            background:linear-gradient(180deg,#2a7489,#0f4a61);border-radius:18px 0 0 18px;
+        }
+        .home-quote-avatar{
+            width:clamp(70px,7vw,100px);height:clamp(70px,7vw,100px);border-radius:50%;
+            background:linear-gradient(135deg,#0f4a61,#1a6a82);
+            display:grid;place-items:center;flex-shrink:0;
+            font-family:'DM Sans',sans-serif;font-size:clamp(22px,2.2vw,32px);
+            font-weight:900;color:#fff;letter-spacing:1px;
+            box-shadow:0 4px 16px rgba(15,74,97,.2);
+        }
+        .home-quote-body{flex:1;min-width:0}
+        .home-quote-text{
+            font-family:'DM Sans',sans-serif;
+            font-size:clamp(16px,1.4vw,22px);line-height:1.55;
+            color:#1a3d4d;font-weight:500;font-style:italic;
+            position:relative;padding-left:20px;
+        }
+        .home-quote-text::before{
+            content:'\201C';position:absolute;left:-4px;top:-8px;
+            font-size:clamp(40px,3.5vw,60px);font-weight:900;color:#2a7489;
+            opacity:.25;font-style:normal;line-height:1;
+        }
+        .home-quote-text strong{font-weight:800;color:#0f4a61;font-style:normal}
+        .home-quote-author{
+            margin-top:12px;padding-left:20px;display:flex;align-items:center;gap:10px;
+        }
+        .home-quote-dash{width:24px;height:2px;background:#2a7489;border-radius:2px}
+        .home-quote-name{
+            font-family:'DM Sans',sans-serif;font-size:clamp(13px,1vw,16px);
+            font-weight:800;color:#0f4a61;text-transform:uppercase;letter-spacing:.8px;
+        }
+        .home-quote-role{
+            font-family:'DM Sans',sans-serif;font-size:clamp(11px,.85vw,13px);
+            font-weight:500;color:#5a7a84;margin-left:2px;
+        }
+        [data-theme="dark"] .home-quote{background:linear-gradient(135deg,#162228,#1a2e36);border-color:#2a3d44}
+        [data-theme="dark"] .home-quote::before{background:linear-gradient(180deg,#4db8d4,#2a7489)}
+        [data-theme="dark"] .home-quote-text{color:#d0dfe5}
+        [data-theme="dark"] .home-quote-text::before{color:#4db8d4}
+        [data-theme="dark"] .home-quote-text strong{color:#fff}
+        [data-theme="dark"] .home-quote-dash{background:#4db8d4}
+        [data-theme="dark"] .home-quote-name{color:#4db8d4}
+        [data-theme="dark"] .home-quote-role{color:#8aa4ae}
+        [data-theme="dark"] .home-quote-avatar{background:linear-gradient(135deg,#1a556d,#2a7a90)}
+        @media(max-width:600px){
+            .home-quote{flex-direction:column;text-align:center}
+            .home-quote::before{width:100%;height:4px;bottom:auto;border-radius:18px 18px 0 0}
+            .home-quote-text{padding-left:0}
+            .home-quote-text::before{display:none}
+            .home-quote-author{justify-content:center;padding-left:0}
+        }
+
+        .home-path-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+        .home-path-card{background:#fff;border:1px solid #dae5e9;border-radius:14px;padding:20px;box-shadow:0 5px 12px rgba(0,0,0,.03);display:flex;flex-direction:column;gap:10px;transition:transform .25s,box-shadow .25s}
+        .home-path-card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(0,0,0,.08)}
+        .home-path-tag{display:inline-flex;align-items:center;justify-content:center;height:24px;padding:0 9px;border-radius:999px;background:#e6f0f4;color:#2a6577;font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;width:fit-content}
+        .home-path-title{font-size:clamp(20px,1.6vw,28px);line-height:1.1;color:#184556;font-weight:900}
+        .home-path-desc{font-size:14px;line-height:1.5;color:#556970;flex:1}
+        .home-trust{margin-top:50px;background:linear-gradient(135deg,#0a1e2a 0%,#0f3345 50%,#0c2a3a 100%);border:none;border-radius:0;padding:clamp(36px,5vw,70px) 24px;color:#fff}
+        .home-trust-inner{max-width:1200px;margin:0 auto}
+        .home-trust-title{font-size:clamp(20px,1.8vw,30px);font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:28px}
+        .home-trust-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+        .home-trust-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:18px 16px;transition:transform .25s,background .25s}
+        .home-trust-item:hover{transform:translateY(-3px);background:rgba(255,255,255,.1)}
+        .home-trust-kpi{font-size:clamp(20px,1.6vw,28px);line-height:1;font-weight:900;color:#4db8d4}
+        .home-trust-label{margin-top:8px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.5);font-weight:700}
+        .home-trust-text{margin-top:8px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.65)}
+
+        .home-title{font-size:clamp(22px,2vw,34px);line-height:1.05;color:#2a7185;font-weight:900;text-transform:uppercase;margin:60px 0 22px}
+
+        .practical-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+        .practical-card{background:#f5f6f7;border:1px solid #e1e5e8;border-radius:14px;padding:18px 20px 18px 22px;position:relative;box-shadow:0 6px 14px rgba(0,0,0,.04)}
+        .practical-card:before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;background:#2a7a86;border-radius:14px 0 0 14px}
+        .practical-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;color:#1a3340}
+        .practical-head svg{width:26px;height:26px;color:#2b7b89;flex-shrink:0}
+        .practical-head h4{font-size:clamp(19px,1.8vw,34px);font-weight:800;line-height:1.1}
+        .practical-body,.practical-body a{font-size:clamp(16px,1.35vw,26px);color:#5b5f63}
+        .practical-body b{color:#1f1f20;font-weight:900}
+        .practical-body a{color:#2b7686;font-weight:700}
+        .whatsapp-btn-home{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 16px;background:#2ecc61;color:#fff;border-radius:9px;font-weight:700;margin-top:10px;font-size:clamp(13px,1vw,18px)}
+        .whatsapp-btn-home:hover{background:#24bb56}
+
+        .map-card{margin-top:20px;background:#f5f6f7;border:1px solid #e1e5e8;border-radius:14px;padding:14px}
+        .map-frame{width:100%;height:310px;border:0;border-radius:12px}
+        .route-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+        .route-btn{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 14px;border-radius:9px;font-size:14px;font-weight:700;border:1px solid #b9c8ce;background:#fff;color:#1f5565}
+        .route-btn.primary{background:#1f6f85;color:#fff;border-color:#1f6f85}
+        .route-btn:hover{filter:brightness(.97)}
+
+        .home-news{margin-top:50px}
+        .home-news-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+        .home-news-title{margin:0}
+        .home-news-all{display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;color:#0f7d65;font:800 clamp(14px,1.1vw,24px) 'DM Sans',sans-serif;cursor:pointer;text-transform:uppercase}
+        .home-news-all:hover{text-decoration:underline}
+        .home-news-all .arrow{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#0f7d65;color:#fff;font-size:14px;line-height:1}
+        .home-news-slider{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}
+        .home-news-arrow{width:30px;height:30px;border-radius:50%;border:1px solid #c6d7dc;background:#fff;color:#2f5e6f;display:grid;place-items:center;cursor:pointer;font-size:17px;line-height:1}
+        .home-news-arrow:disabled{opacity:.35;cursor:not-allowed}
+        .home-news-viewport{overflow-x:auto;scrollbar-width:none}
+        .home-news-viewport::-webkit-scrollbar{display:none}
+        .home-news-track{display:flex;gap:14px}
+        .home-news-card{flex:0 0 calc((100% - 28px)/3);min-width:280px;background:#fff;border:1px solid #dfe7ea;border-radius:14px;padding:16px 18px 14px;box-shadow:0 5px 12px rgba(0,0,0,.03);border-left:8px solid #0f7d65;cursor:pointer;overflow:hidden}
+        .home-news-card-title{font-size:clamp(18px,1.45vw,31px);line-height:1.2;color:#0f2e3c;font-weight:800;overflow-wrap:anywhere;word-break:break-word;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+        .home-news-card-date{margin-top:8px;color:#8a9096;font-size:clamp(14px,1.1vw,25px);font-weight:600}
+        .home-news-empty{padding:20px;border:1px dashed #c8d7dd;border-radius:12px;color:#5f747b;background:#f9fbfc}
+
+        .reviews-shell{margin-top:44px;background:#f5f6f7;border:1px solid #e1e5e8;border-radius:14px;padding:20px}
+        .reviews-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid #e3e8ea}
+        .reviews-title{font-size:clamp(18px,1.5vw,28px);font-weight:900;color:#1f5e73}
+        .reviews-summary{font-size:14px;color:#4f6167}
+        .reviews-actions{display:flex;gap:8px;flex-wrap:wrap}
+        .reviews-btn{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 12px;border-radius:9px;border:1px solid #b9c8ce;background:#fff;color:#1f5565;font:700 13px 'DM Sans',sans-serif;cursor:pointer}
+        .reviews-btn.primary{background:#1f6f85;color:#fff;border-color:#1f6f85}
+        .reviews-btn:hover{filter:brightness(.98)}
+        .reviews-state{padding:14px 0 2px;font-size:14px;color:#607278}
+        .reviews-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+        .reviews-embed{margin-top:12px;background:#fff;border:1px solid #dce4e7;border-radius:12px;overflow:hidden}
+        .reviews-embed iframe{width:100%;height:420px;border:0;display:block}
+        .review-card{background:#fff;border:1px solid #e1e8ea;border-radius:12px;padding:12px;box-shadow:0 4px 10px rgba(0,0,0,.03)}
+        .review-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+        .review-author{font-size:14px;font-weight:700;color:#1b3f4b}
+        .review-time{font-size:12px;color:#7d8f94}
+        .review-stars{font-size:13px;font-weight:800;color:#d78e00;white-space:nowrap}
+        .review-text{font-size:13px;line-height:1.45;color:#3f5258}
+
+        .page-wrap{max-width:1200px;margin:0 auto;padding:30px 18px 56px}
+        .page-hero{background:linear-gradient(120deg,#e9f2f6,#f8fbfc);border:1px solid #dbe7eb;border-radius:16px;padding:26px 24px;margin-bottom:20px}
+        .page-title{font-size:clamp(28px,2.6vw,42px);line-height:1.05;font-weight:900;color:#1f5f76;text-transform:uppercase;letter-spacing:.3px}
+        .page-subtitle{margin-top:8px;color:#53666d;font-size:clamp(15px,1.1vw,19px)}
+        .page-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+        .page-card{background:#fff;border:1px solid #e1e7ea;border-radius:14px;padding:16px;box-shadow:0 5px 12px rgba(0,0,0,.03)}
+        .page-card h4{font-size:clamp(18px,1.45vw,24px);line-height:1.15;color:#1f4f62;margin-bottom:8px}
+        .page-card p{font-size:14px;color:#5b6c72;line-height:1.5}
+        .page-list{margin-top:8px;padding-left:18px;color:#4e6168;font-size:14px}
+        .page-list li{margin-bottom:4px}
+        .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+        .cta-btn{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 14px;border-radius:10px;border:1px solid #b9c8ce;background:#fff;color:#1f5565;font:700 13px 'DM Sans',sans-serif;cursor:pointer}
+        .cta-btn.primary{background:#1f6f85;color:#fff;border-color:#1f6f85}
+        .cta-btn:hover{filter:brightness(.98)}
+        .cta-btn:focus-visible{outline:3px solid #8fb5c2;outline-offset:2px}
+
+        .quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+        .quick-link{background:transparent;border:0;border-bottom:4px solid #2b7686;display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 8px 18px;color:#202327;font:800 clamp(14px,1.2vw,24px) 'DM Sans',sans-serif;cursor:pointer;transition:.15s;text-transform:uppercase}
+        .quick-link svg{width:28px;height:28px;color:#2b7686}
+        .quick-link:hover{color:#2b7686;border-bottom-color:#1f6070}
+        .team-intro{margin-top:2px;color:#4f666e;font-size:clamp(15px,1.05vw,18px);line-height:1.5}
+        .team-grid{margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+        .team-card{background:#fff;border:1px solid #dce6ea;border-radius:14px;padding:18px;box-shadow:0 5px 12px rgba(0,0,0,.03);transition:transform .25s,box-shadow .25s}
+        .team-card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(0,0,0,.08)}
+        .team-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#e5f0f4;color:#1f6074;font-size:14px;font-weight:900;letter-spacing:.4px}
+        .team-name{margin-top:10px;font-size:clamp(19px,1.38vw,24px);line-height:1.1;color:#173f4f;font-weight:900}
+        .team-role{margin-top:5px;font-size:13px;text-transform:uppercase;letter-spacing:.35px;font-weight:800;color:#2a7a8f}
+        .team-desc{margin-top:8px;font-size:14px;line-height:1.5;color:#556a71}
+
+        .news-toolbar,.resource-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:4px 0 16px}
+        .news-search,.resource-search{flex:1;min-width:260px;display:flex;align-items:center;gap:8px;background:#f8fbfc;border:1px solid #dbe5e8;border-radius:10px;padding:8px 10px}
+        .news-search input,.resource-search input{width:100%;border:0;background:transparent;outline:none;font:500 14px 'DM Sans',sans-serif;color:#17363f}
+        .tool-link{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 12px;border-radius:10px;border:1px solid #b9c8ce;background:#fff;color:#1f5565;font:700 13px 'DM Sans',sans-serif}
+        .tool-link.primary{background:#1f6f85;color:#fff;border-color:#1f6f85}
+        .tool-link:hover{filter:brightness(.98)}
+
+        .news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+        .news-card{background:#fff;border:1px solid #dfe7ea;border-radius:14px;padding:14px;box-shadow:0 5px 12px rgba(0,0,0,.03);display:flex;flex-direction:column;gap:8px}
+        .news-cover{width:100%;height:170px;border-radius:10px;overflow:hidden;background:#eef3f5;border:1px solid #dde6e9}
+        .news-cover img{width:100%;height:100%;object-fit:cover;display:block}
+        .news-date{font-size:12px;color:#6e8086;font-weight:700}
+        .news-title{font-size:18px;line-height:1.2;color:#1d4f62;font-weight:800}
+        .news-summary{font-size:14px;line-height:1.45;color:#52666d;flex:1;overflow-wrap:anywhere;word-break:break-word}
+        .news-link{font-size:13px;font-weight:700;color:#1f6f85}
+        .news-link-btn{border:0;background:transparent;padding:0;cursor:pointer;text-align:left}
+        .news-empty{padding:24px;border:1px dashed #c8d7dd;border-radius:12px;color:#5f747b;background:#f9fbfc}
+
+        .news-dialog{display:none;position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:310;place-items:stretch;padding:0}
+        .news-dialog.open{display:grid}
+        .news-dialog-card{width:100vw;height:100vh;max-height:100vh;overflow-y:auto;background:#fff;border-radius:0;box-shadow:0 15px 40px rgba(0,0,0,.24)}
+        .news-dialog-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:18px 18px 10px;border-bottom:1px solid #e7eef1;position:sticky;top:0;background:#fff;z-index:2}
+        .news-dialog-title{font-size:24px;line-height:1.2;color:#1b4f62;font-weight:800}
+        .news-dialog-close{width:32px;height:32px;border-radius:8px;border:0;background:#eef3f5;color:#2c5f71;cursor:pointer;font-size:17px}
+        .news-dialog-close:hover{background:#e1ecef}
+        .news-dialog-meta{font-size:13px;color:#6c8087;font-weight:700;margin-top:8px}
+        .news-dialog-actions{padding:0 18px 8px;display:flex;gap:8px;flex-wrap:wrap}
+        .news-dialog-openlink{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 12px;border-radius:9px;border:1px solid #b9c8ce;background:#fff;color:#1f5565;font:700 13px 'DM Sans',sans-serif}
+        .news-dialog-back{background:#1f6f85;border-color:#1f6f85;color:#fff}
+        .news-dialog-back:hover{filter:brightness(.98)}
+        .news-dialog-image{padding:0 18px 10px}
+        .news-dialog-image img{display:block;width:100%;max-height:360px;object-fit:cover;border-radius:10px;border:1px solid #dde6ea}
+        .news-dialog-body{padding:14px 18px 24px;font-size:15px;line-height:1.6;color:#40565e;overflow-wrap:anywhere;word-break:break-word}
+        .fiche-dialog-summary{padding:10px 18px 4px;font-size:14px;line-height:1.55;color:#40565e;overflow-wrap:anywhere;word-break:break-word}
+        .fiche-dialog-frame{padding:12px 18px 24px}
+        .fiche-dialog-frame iframe{display:block;width:100%;height:78vh;min-height:520px;border:1px solid #dde6ea;border-radius:10px;background:#f3f6f7}
+        @media (max-width:720px){
+            .fiche-dialog-frame iframe{height:74vh;min-height:420px}
+        }
+
+        .resource-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+        .resource-cat{padding:7px 12px;border-radius:999px;border:1px solid #cfdbdf;background:#fff;color:#48636a;font:700 12px 'DM Sans',sans-serif;cursor:pointer}
+        .resource-cat.on{background:#1f6f85;color:#fff;border-color:#1f6f85}
+        .resource-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+        .resource-card{background:#fff;border:1px solid #dfe7ea;border-radius:14px;padding:14px;box-shadow:0 5px 12px rgba(0,0,0,.03)}
+        .resource-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+        .resource-badge{padding:3px 8px;border-radius:6px;background:#eaf2f5;color:#356174;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+        .resource-updated{font-size:11px;color:#7d9096}
+        .resource-title{font-size:17px;line-height:1.2;font-weight:800;color:#1c4e61;margin-bottom:6px}
+        .resource-summary{font-size:14px;color:#54686f;line-height:1.45;margin-bottom:10px}
+        .resource-actions{display:flex;gap:8px;flex-wrap:wrap}
+        .resource-btn{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 10px;border-radius:8px;border:1px solid #b9c8ce;background:#fff;color:#1f5565;font:700 12px 'DM Sans',sans-serif}
+        .resource-btn.primary{background:#1f6f85;color:#fff;border-color:#1f6f85}
+        .resource-btn.disabled{opacity:.55;pointer-events:none}
+
+        .whatsapp-float{position:fixed;right:24px;bottom:24px;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#27d366;color:#fff;box-shadow:0 8px 18px rgba(0,0,0,.2);z-index:240}
+        .whatsapp-float svg{width:36px;height:36px}
+
+        /* ══════════ BACK TO TOP ══════════ */
+        .back-top{position:fixed;right:24px;bottom:100px;width:44px;height:44px;border-radius:50%;border:0;background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.15);cursor:pointer;z-index:240;display:none;place-items:center;transition:opacity .2s,transform .2s}
+        .back-top.show{display:grid}
+        .back-top:hover{transform:scale(1.1)}
+        .back-top svg{width:20px;height:20px}
+
+        /* ══════════ DARK MODE TOGGLE ══════════ */
+        .theme-toggle{width:36px;height:36px;border-radius:10px;border:1px solid #cfd9dd;background:#fff;color:#2a5160;display:grid;place-items:center;cursor:pointer;transition:.15s;margin-left:6px}
+        .theme-toggle:hover{background:#ebeff1}
+        [data-theme="dark"] .theme-toggle{background:#1a272d;color:#9ab0b8;border-color:#2a3d44}
+        .theme-toggle svg{width:18px;height:18px}
+
+        /* ══════════ PAGE TRANSITIONS ══════════ */
+        .site-page{display:none;animation:pageIn .25s ease}
+        @keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+        /* ══════════ MODAL BREADCRUMB ══════════ */
+        .modal-breadcrumb{display:flex;align-items:center;gap:6px;padding:0 24px 0;margin-top:-4px;font-size:11px;color:var(--text-muted)}
+        .modal-breadcrumb span{cursor:default}
+        .modal-breadcrumb .bc-sep{opacity:.4}
+        .modal-breadcrumb .bc-current{color:var(--accent);font-weight:600}
+
+        /* ══════════ PDF VIEWER ENHANCED ══════════ */
+        .pdf-toolbar{display:flex;gap:8px;padding:8px 18px;align-items:center}
+        .pdf-toolbar-btn{height:34px;padding:0 12px;border-radius:8px;border:1px solid #b9c8ce;background:#fff;color:#1f5565;font:700 12px 'DM Sans',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+        .pdf-toolbar-btn:hover{background:#f2f7f8}
+        .pdf-toolbar-btn svg{width:16px;height:16px}
+        [data-theme="dark"] .pdf-toolbar-btn{background:var(--bg-card);color:var(--text-mid);border-color:var(--border)}
+        .fiche-dialog-frame.fullscreen{position:fixed;inset:0;z-index:500;padding:0;background:#000}
+        .fiche-dialog-frame.fullscreen iframe{height:100vh;min-height:100vh;border:0;border-radius:0}
+        .pdf-fs-close{position:fixed;top:16px;right:16px;z-index:510;width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:20px;cursor:pointer;display:none;place-items:center}
+        .fiche-dialog-frame.fullscreen .pdf-fs-close{display:grid}
+
+        /* ══════════ COMPENDIUM SECTION ══════════ */
+        .search-bar{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:72px;z-index:90;padding:16px 28px}
+        .search-inner{max-width:1200px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+        .compendium-tools{max-width:1200px;margin:10px auto 0;padding:0 28px}
+        .back-home-btn{height:36px;padding:0 12px;border-radius:9px;border:1px solid var(--border);background:#fff;color:#205f72;font:700 13px 'DM Sans',sans-serif;cursor:pointer}
+        .back-home-btn:hover{background:#f2f7f8}
+        .search-field{flex:1;min-width:240px;position:relative}
+        .search-field svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--text-muted)}
+        .search-field input{width:100%;padding:11px 14px 11px 40px;border:2px solid var(--border);border-radius:var(--radius);font:14px 'DM Sans',sans-serif;background:var(--bg);transition:.2s}
+        .search-field input:focus{outline:0;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px var(--accent-glow)}
+        .chips{display:flex;gap:6px;flex-wrap:wrap}
+        .chip{padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--text-muted);transition:.15s;user-select:none}
+        .chip:hover{border-color:var(--accent);color:var(--accent)}
+        .chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+        .topbar{max-width:1200px;margin:0 auto;padding:14px 28px 4px;font-size:13px;color:var(--text-muted)}
+        .topbar b{font-size:20px;color:var(--text);margin-right:2px}
+
+        .grid{max-width:1200px;margin:8px auto 60px;padding:0 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px}
+
+        /* ══════ CARD ══════ */
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:.2s;display:flex;overflow:hidden}
+        .card:hover{box-shadow:var(--shadow-hover);border-color:var(--accent);transform:translateY(-1px)}
+        .card-photo{width:80px;min-height:100%;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;border-right:1px solid var(--border-light)}
+        .card-photo img{width:100%;height:100%;object-fit:cover}
+        .card-photo .no-ph{width:100%;height:100%;display:grid;place-items:center;color:var(--text-faint);font-size:10px;padding:6px}
+        .card-body{padding:14px 16px;flex:1;min-width:0}
+        .tag{display:inline-block;padding:2px 9px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px}
+        .tag-Chimie{background:var(--c-chimie-bg);color:var(--c-chimie)}
+        .tag-Hématologie{background:var(--c-hemato-bg);color:var(--c-hemato)}
+        .tag-Microbiologie{background:var(--c-micro-bg);color:var(--c-micro)}
+        .tag-Immunologie{background:var(--c-immuno-bg);color:var(--c-immuno)}
+        .tag-Hormonologie{background:var(--c-hormo-bg);color:var(--c-hormo)}
+        .tag-Autre{background:#eef2f5;color:#516066}
+        .card-top{display:flex;justify-content:space-between;gap:8px}
+        .card-title{font-size:13.5px;font-weight:600;line-height:1.3}
+        .card-code{font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--bg);padding:2px 7px;border-radius:4px;color:var(--text-muted);white-space:nowrap;height:fit-content}
+        .card-info{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px;padding-top:7px;border-top:1px solid var(--border-light)}
+        .info{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-mid)}
+        .info svg{width:12px;height:12px;opacity:.4;flex-shrink:0}
+        .info b{font-weight:600}
+        .dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+        .dot-rouge{background:#d63031}.dot-violet{background:#8e44ad}.dot-bleu{background:#2e86de}
+        .dot-vert{background:#27ae60}.dot-gris{background:#95a5a6}.dot-jaune{background:#f0c929}.dot-orange{background:#e67e22}
+
+        /* ══════ MODAL ══════ */
+        .overlay{display:none;position:fixed;inset:0;padding:1vh .5vw;background:rgba(0,0,0,.45);z-index:300;backdrop-filter:blur(3px);place-items:center}
+        .overlay.open{display:grid}
+        .modal{background:#fff;border-radius:12px;width:min(99vw,1700px);height:98vh;max-height:98vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.15);animation:up .22s ease}
+        @keyframes up{from{opacity:0;transform:translateY(16px)}}
+        .modal-head{padding:20px 24px 12px;border-bottom:1px solid var(--border-light);position:sticky;top:0;background:#fff;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:start;z-index:10}
+        .modal-head-left h2{font-size:17px;font-weight:700;line-height:1.3}
+        .close-btn{width:30px;height:30px;border-radius:8px;border:0;background:var(--bg);cursor:pointer;font-size:16px;color:var(--text-muted);display:grid;place-items:center;flex-shrink:0;transition:.15s}
+        .close-btn:hover{background:var(--accent-light);color:var(--accent)}
+
+        /* Toggle patient / médecin */
+        .view-toggle{display:flex;background:var(--bg);border-radius:10px;padding:4px;margin:18px 24px 0;gap:4px}
+        .view-btn{flex:1;padding:10px 18px;border:0;border-radius:8px;font:14px 'DM Sans',sans-serif;font-weight:600;cursor:pointer;background:transparent;color:var(--text-muted);transition:.15s;text-align:center}
+        .view-btn.active{background:#fff;color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+        .view-btn:hover:not(.active){color:var(--text)}
+
+        .modal-body{padding:18px 24px 26px}
+
+        /* Photo in modal */
+        .modal-photo{width:100%;max-height:200px;border-radius:8px;overflow:hidden;margin-bottom:16px;background:var(--bg);display:flex;align-items:center;justify-content:center}
+        .modal-photo img{max-width:100%;max-height:200px;object-fit:contain}
+        .modal-photo .no-ph-lg{padding:24px;color:var(--text-faint);font-size:13px}
+
+        /* Patient view — simplified */
+        .patient-view{display:none}
+        .patient-view.show{display:block}
+        .pv-name{font-size:20px;font-weight:700;color:var(--text);margin-bottom:18px;line-height:1.3}
+        .pv-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .pv-card{background:var(--bg);border-radius:10px;padding:16px;text-align:center}
+        .pv-card-icon{font-size:28px;margin-bottom:6px}
+        .pv-card-label{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);font-weight:600;margin-bottom:4px}
+        .pv-card-value{font-size:15px;font-weight:700}
+        .pv-card-value.yes{color:#d63031}
+        .pv-card-value.no{color:var(--green)}
+        .pv-note{margin-top:16px;padding:14px;background:var(--accent-light);border-radius:8px;font-size:13px;color:var(--accent);line-height:1.5}
+        .pv-note b{font-weight:700}
+
+        /* Medecin view — full detail */
+        .medecin-view{display:none}
+        .medecin-view.show{display:block}
+        .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .field{padding:10px 12px;background:var(--bg);border-radius:7px}
+        .field.wide{grid-column:1/-1}
+        .field-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);font-weight:600;margin-bottom:2px}
+        .field-value{font-size:13px;color:var(--text);font-weight:500}
+        .field-value.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+
+        .empty{text-align:center;padding:50px 20px;color:var(--text-muted);grid-column:1/-1}
+        .empty h3{font-size:15px;color:var(--text);margin:10px 0 4px}
+        .loading{text-align:center;padding:60px;color:var(--text-muted);font-size:14px;grid-column:1/-1}
+        footer{text-align:center;padding:20px;font-size:11px;color:var(--text-faint);border-top:1px solid var(--border-light)}
+
+        /* ══════════ RESPONSIVE ══════════ */
+        @media(max-width:980px){
+            .home-hero-grid{grid-template-columns:1fr}
+            .practical-grid{grid-template-columns:1fr}
+            .page-grid{grid-template-columns:1fr 1fr}
+            .home-path-grid{grid-template-columns:1fr 1fr}
+            .home-trust-grid{grid-template-columns:1fr 1fr}
+            .team-grid{grid-template-columns:1fr 1fr}
+            .home-news-card{flex:0 0 calc((100% - 14px)/2)}
+            .reviews-grid{grid-template-columns:1fr 1fr}
+            .news-grid{grid-template-columns:1fr 1fr}
+            .resource-grid{grid-template-columns:1fr 1fr}
+            .quick-grid{grid-template-columns:1fr 1fr}
+            .home-title{margin-top:28px}
+            .map-frame{height:260px}
+        }
+        @media(max-width:768px){
+            .nav-inner,.search-inner,.topbar,.grid{padding-left:14px;padding-right:14px}
+            .nav-mini{width:76px}
+            .nav-links{gap:8px}
+            .nav-link{padding:8px 12px}
+            .lang-switch{margin-left:0}
+            .lang-btn{min-width:58px;padding:0 8px}
+            .grid{grid-template-columns:1fr}
+            .home-hero{padding:18px 14px}
+            .home-search-input{width:100%;font-size:16px}
+            .home-news-slider{grid-template-columns:1fr}
+            .home-news-arrow{display:none}
+            .home-news-card{flex:0 0 100%;min-width:100%}
+            .overlay{padding:0;place-items:stretch}
+            .modal{width:100vw;height:100vh;max-height:100vh;border-radius:0}
+            .modal-head{border-radius:0}
+            .fields{grid-template-columns:1fr}
+            .card-info{grid-template-columns:1fr}
+            .card-photo{width:65px}
+            .home-wrap{padding-left:14px;padding-right:14px}
+            .page-wrap{padding-left:14px;padding-right:14px}
+            .page-grid{grid-template-columns:1fr}
+            .reviews-grid{grid-template-columns:1fr}
+            .news-grid{grid-template-columns:1fr}
+            .resource-grid{grid-template-columns:1fr}
+            .quick-grid{grid-template-columns:1fr}
+            .home-path-grid{grid-template-columns:1fr}
+            .home-trust-grid{grid-template-columns:1fr}
+            .team-grid{grid-template-columns:1fr}
+            .pv-cards{grid-template-columns:1fr}
+            .view-toggle{margin:14px 14px 0}
+            .modal-body{padding:16px 14px 22px}
+            .modal-head{padding:16px 14px 10px}
+            .whatsapp-float{width:54px;height:54px;right:16px;bottom:16px}
+            .whatsapp-float svg{width:30px;height:30px}
+            .back-top{right:16px;bottom:80px;width:38px;height:38px}
+            .compendium-tools{padding-left:14px;padding-right:14px}
+            .modal-breadcrumb{padding:0 14px}
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav class="nav">
+    <div class="nav-inner">
+        <div class="nav-logo" onclick="showPage('home')">
+            <img class="nav-mini" src="CAMC_logo_full_transparent_tight.png" alt="CAMC">
+        </div>
+        <div class="nav-links">
+            <div class="nav-link active" data-page="home" onclick="showPage('home')">Accueil</div>
+            <div class="nav-link" data-page="services" onclick="showPage('services')">Services</div>
+            <div class="nav-link" data-page="actualites" onclick="showPage('actualites')">Actualités</div>
+            <div class="nav-link" data-page="fiches" onclick="showPage('fiches')">Fiches Labo</div>
+            <div class="nav-link" data-page="prelevements" onclick="showPage('prelevements')">Prélèvements</div>
+            <div class="nav-link" data-page="contact" onclick="showPage('contact')">Contact</div>
+            <div class="nav-link" data-page="compendium" onclick="showPage('compendium')">Compendium</div>
+        </div>
+        <div class="lang-switch">
+            <button type="button" class="lang-btn on" data-lang="fr" aria-label="Passer en français">🇫🇷 FR</button>
+            <button type="button" class="lang-btn" data-lang="en" aria-label="Switch to English">🇬🇧 EN</button>
+            <button type="button" class="lang-btn" data-lang="ar" aria-label="التحويل إلى العربية">🇲🇦 AR</button>
+            <button type="button" class="theme-toggle" id="themeToggle" aria-label="Mode sombre">
+                <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════ PAGE ACCUEIL ═══════════════ -->
+<section id="home" class="site-page">
+    <div class="home-wrap">
+        <div class="home-logo-wrap">
+            <img class="home-logo" src="CAMC_logo_full_transparent_tight.png" alt="CAMC Analyses Médicales">
+        </div>
+    </div>
+
+    <div class="home-tagline">
+        <div class="home-tagline-main">
+            Le <b>C</b>entre d'<b>A</b>nalyses <b>M</b>édicales de <b>C</b>asablanca
+        </div>
+        <div class="home-tagline-rule"></div>
+        <div class="home-tagline-since">depuis plus de 10 ans</div>
+    </div>
+
+    <div class="home-wrap">
+        <div class="home-hero">
+            <div class="home-hero-grid">
+                <div>
+                    <div class="home-kicker">Centre d'Analyses Médicales de Casablanca</div>
+                    <h1 class="home-main-title">Votre laboratoire de proximité pour des analyses fiables et rapides</h1>
+                    <p class="home-main-subtitle">Accueil patient, prélèvements, qualité analytique et accompagnement médical: CAMC centralise l'essentiel sur une seule plateforme claire.</p>
+                    <div class="home-cta-row">
+                        <button type="button" class="cta-btn primary" onclick="showPage('compendium')">Accéder au Compendium</button>
+                        <button type="button" class="cta-btn" onclick="showPage('services')">Découvrir le laboratoire</button>
+                    </div>
+                </div>
+                <div class="home-highlights">
+                    <article class="home-highlight">
+                        <h4>Service patient</h4>
+                        <p>Accueil fluide, prélèvements encadrés et consignes claires avant chaque examen.</p>
+                    </article>
+                    <article class="home-highlight">
+                        <h4>Fiabilité analytique</h4>
+                        <p>Procédures standardisées, traçabilité complète et démarche qualité alignée ISO 15189.</p>
+                    </article>
+                    <article class="home-highlight">
+                        <h4>Délai maîtrisé</h4>
+                        <p>Organisation des flux pour un rendu rapide des résultats et un suivi réactif.</p>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="home-title reveal">L'équipe à votre service</h3>
+        <div class="home-quote reveal">
+            <div class="home-quote-avatar">RS</div>
+            <div class="home-quote-body">
+                <div class="home-quote-text">
+                    <strong>60 à 70% des diagnostics</strong> passent par le laboratoire. Bien choisir son laboratoire, c'est <strong>prendre en main sa santé</strong>.
+                </div>
+                <div class="home-quote-author">
+                    <span class="home-quote-dash"></span>
+                    <span class="home-quote-name">Dr. Sqalli</span>
+                    <span class="home-quote-role">— Fondateur, CAMC</span>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="home-title reveal">Parcours rapides</h3>
+        <div class="home-path-grid">
+            <article class="home-path-card reveal">
+                <span class="home-path-tag">Patient</span>
+                <h4 class="home-path-title">Préparer ma visite</h4>
+                <p class="home-path-desc">Retrouvez les consignes de prélèvement, les horaires, et les informations pratiques avant de vous déplacer.</p>
+                <button type="button" class="cta-btn primary" onclick="showPage('prelevements')">Voir le guide prélèvements</button>
+            </article>
+            <article class="home-path-card reveal reveal-d1">
+                <span class="home-path-tag">Médecin</span>
+                <h4 class="home-path-title">Trouver une analyse</h4>
+                <p class="home-path-desc">Accédez rapidement aux conditions de prélèvement, aux délais et à la vue métier via le compendium.</p>
+                <button type="button" class="cta-btn primary" onclick="showPage('compendium')">Ouvrir le Compendium</button>
+            </article>
+            <article class="home-path-card reveal reveal-d2">
+                <span class="home-path-tag">Résultats</span>
+                <h4 class="home-path-title">Consulter mes résultats</h4>
+                <p class="home-path-desc">Accédez au canal de résultats du laboratoire et contactez l'équipe en cas de besoin d'assistance.</p>
+                <a class="cta-btn primary" href="#" id="homeResultsLink">Accéder aux résultats</a>
+            </article>
+        </div>
+
+    </div>
+
+    <div class="home-trust">
+        <div class="home-trust-inner">
+            <div class="home-trust-title">Pourquoi nous faire confiance</div>
+            <div class="home-trust-grid">
+                <article class="home-trust-item reveal">
+                    <div class="home-trust-kpi">ISO 15189</div>
+                    <div class="home-trust-label">Référentiel</div>
+                    <p class="home-trust-text">Démarche qualité structurée autour des exigences de biologie médicale.</p>
+                </article>
+                <article class="home-trust-item reveal reveal-d1">
+                    <div class="home-trust-kpi">7j/7*</div>
+                    <div class="home-trust-label">Horaires</div>
+                    <p class="home-trust-text">Ouverture élargie selon plages du laboratoire et permanence d'information.</p>
+                </article>
+                <article class="home-trust-item reveal reveal-d2">
+                    <div class="home-trust-kpi">Traçabilité</div>
+                    <div class="home-trust-label">Processus</div>
+                    <p class="home-trust-text">Suivi pré-analytique, analytique et post-analytique pour chaque dossier.</p>
+                </article>
+                <article class="home-trust-item reveal reveal-d3">
+                    <div class="home-trust-kpi">Support</div>
+                    <div class="home-trust-label">Patient &amp; Prescripteur</div>
+                    <p class="home-trust-text">Équipe disponible pour orienter les patients et répondre aux prescripteurs.</p>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <div class="home-wrap">
+        <h3 class="home-title reveal">Notre équipe</h3>
+        <p class="team-intro reveal">Une équipe pluridisciplinaire mobilisée pour la qualité du prélèvement, l'analyse biologique et l'accompagnement quotidien des patients.</p>
+        <div class="team-grid">
+            <article class="team-card reveal">
+                <h4 class="team-name">Dr. M. Kabbaj</h4>
+                <div class="team-role">Direction médicale</div>
+                <p class="team-desc">Supervision qualité, validation biologique et interprétation des résultats selon le contexte clinique.</p>
+            </article>
+            <article class="team-card reveal reveal-d1">
+                <div class="team-avatar">SL</div>
+                <h4 class="team-name">S. Lahlou</h4>
+                <div class="team-role">Responsable prélèvements</div>
+                <p class="team-desc">Accueil patient, contrôle pré-analytique et sécurisation des étapes de prélèvement.</p>
+            </article>
+            <article class="team-card reveal reveal-d2">
+                <div class="team-avatar">RB</div>
+                <h4 class="team-name">R. Bennis</h4>
+                <div class="team-role">Référent technique</div>
+                <p class="team-desc">Pilotage des automates, maintenance interne et suivi régulier des contrôles analytiques.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ PAGE SERVICES ═══════════════ -->
+<section id="services" class="site-page">
+    <div class="page-wrap">
+        <div class="page-hero">
+            <h2 class="page-title">Nos Services</h2>
+            <p class="page-subtitle">Un parcours rapide pour les patients, les médecins et les entreprises.</p>
+            <div class="cta-row">
+                <button type="button" class="cta-btn primary" onclick="showPage('compendium')">Ouvrir le Compendium</button>
+                <a class="cta-btn" href="https://wa.me/2125XXXXXXXX" target="_blank" rel="noopener noreferrer">Parler sur WhatsApp</a>
+            </div>
+        </div>
+        <div class="page-grid">
+            <article class="page-card">
+                <h4>Analyses courantes</h4>
+                <p>Bilans de routine, suivi chronique et analyses spécialisées avec délais clairs.</p>
+                <ul class="page-list">
+                    <li>Biochimie, hématologie, immunologie</li>
+                    <li>Résultats priorisés selon urgence</li>
+                </ul>
+            </article>
+            <article class="page-card">
+                <h4>Prélèvements</h4>
+                <p>Prélèvements sur place, avec protocole standardisé et contrôle qualité.</p>
+                <ul class="page-list">
+                    <li>Accueil patient rapide</li>
+                    <li>Traçabilité tube à tube</li>
+                </ul>
+            </article>
+            <article class="page-card">
+                <h4>Accompagnement médecins</h4>
+                <p>Une vue métier claire sur chaque test avec conditions, méthode et interprétation utile.</p>
+                <ul class="page-list">
+                    <li>Compendium orienté pratique</li>
+                    <li>Données structurées pour décision</li>
+                </ul>
+            </article>
+            <article class="page-card">
+                <h4>Urgences biologiques</h4>
+                <p>Traitement prioritaire des demandes urgentes selon les heures d'ouverture du laboratoire.</p>
+            </article>
+            <article class="page-card">
+                <h4>Suivi qualité</h4>
+                <p>Procédures internes de vérification pour fiabilité, cohérence et délais de rendu.</p>
+            </article>
+            <article class="page-card">
+                <h4>Support patient</h4>
+                <p>Informations simples avant prélèvement: à jeun, délai, préparation, conduite à tenir.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ PAGE PRELEVEMENTS ═══════════════ -->
+<section id="prelevements" class="site-page">
+    <div class="page-wrap">
+        <div class="page-hero">
+            <h2 class="page-title">Guide Prélèvements</h2>
+            <p class="page-subtitle">Les consignes essentielles avant de venir au laboratoire.</p>
+        </div>
+        <div class="page-grid">
+            <article class="page-card">
+                <h4>Avant de venir</h4>
+                <ul class="page-list">
+                    <li>Vérifier si l'analyse nécessite le jeûne</li>
+                    <li>Apporter ordonnance et pièce d'identité</li>
+                    <li>Signaler traitement en cours</li>
+                </ul>
+            </article>
+            <article class="page-card">
+                <h4>Le jour du prélèvement</h4>
+                <ul class="page-list">
+                    <li>Hydratation légère recommandée</li>
+                    <li>Respecter l'heure prescrite si demandée</li>
+                    <li>Informer l'équipe en cas de malaise</li>
+                </ul>
+            </article>
+            <article class="page-card">
+                <h4>Après prélèvement</h4>
+                <ul class="page-list">
+                    <li>Compression locale 2 à 3 minutes</li>
+                    <li>Éviter effort intense immédiat</li>
+                    <li>Suivre le délai annoncé pour les résultats</li>
+                </ul>
+            </article>
+            <article class="page-card">
+                <h4>Examens fréquents</h4>
+                <p>Utilisez le compendium pour vérifier, test par test, le tube requis et les conditions de prélèvement.</p>
+                <div class="cta-row">
+                    <button type="button" class="cta-btn primary" onclick="showPage('compendium')">Consulter les analyses</button>
+                </div>
+            </article>
+            <article class="page-card">
+                <h4>Cas particuliers</h4>
+                <p>Grossesse, pédiatrie, anticoagulants ou maladies chroniques: l'équipe adapte les consignes au contexte clinique.</p>
+            </article>
+            <article class="page-card">
+                <h4>Besoin d'aide</h4>
+                <p>Contactez-nous avant déplacement pour confirmer la préparation exacte de votre bilan.</p>
+                <div class="cta-row">
+                    <a class="cta-btn" href="https://wa.me/2125XXXXXXXX" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ PAGE ACTUALITES ═══════════════ -->
+<section id="actualites" class="site-page">
+    <div class="page-wrap">
+        <div class="page-hero">
+            <h2 class="page-title" id="actualitesPageTitle">Actualités du laboratoire</h2>
+            <p class="page-subtitle" id="actualitesPageSubtitle">Mises à jour, informations utiles et communication CAMC.</p>
+        </div>
+        <div class="news-toolbar">
+            <div class="news-search">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input id="newsSearch" type="text" placeholder="Rechercher une actualité...">
+            </div>
+            <a class="tool-link primary" id="newsEditLink" href="#" target="_blank" rel="noopener noreferrer">Mettre à jour (Google Sheets)</a>
+        </div>
+        <div class="news-grid" id="newsGrid"><div class="loading">Chargement des actualités...</div></div>
+    </div>
+</section>
+
+<!-- ═══════════════ PAGE FICHES LABO ═══════════════ -->
+<section id="fiches" class="site-page">
+    <div class="page-wrap">
+        <div class="page-hero">
+            <h2 class="page-title">Fiches Info Labo</h2>
+            <p class="page-subtitle">Documents pratiques et fiches techniques pour patients et prescripteurs.</p>
+        </div>
+        <div class="resource-toolbar">
+            <div class="resource-search">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input id="fichesSearch" type="text" placeholder="Rechercher une fiche...">
+            </div>
+            <a class="tool-link primary" id="fichesEditLink" href="#" target="_blank" rel="noopener noreferrer">Mettre à jour (Google Sheets)</a>
+        </div>
+        <div class="resource-cats" id="fichesCats"></div>
+        <div class="resource-grid" id="fichesGrid"><div class="loading">Chargement des fiches...</div></div>
+    </div>
+</section>
+
+<!-- ═══════════════ PAGE QUALITE ═══════════════ -->
+<section id="qualite" class="site-page">
+    <div class="page-wrap">
+        <div class="page-hero">
+            <h2 class="page-title">Qualité et conformité</h2>
+            <p class="page-subtitle">Notre démarche qualité est alignée sur la norme ISO 15189.</p>
+        </div>
+        <div class="page-grid">
+            <article class="page-card">
+                <h4>ISO 15189</h4>
+                <p>Référence internationale pour la qualité et la compétence des laboratoires de biologie médicale.</p>
+            </article>
+            <article class="page-card">
+                <h4>Traçabilité</h4>
+                <p>Chaque étape du processus analytique est suivie, du prélèvement au rendu du résultat.</p>
+            </article>
+            <article class="page-card">
+                <h4>Amélioration continue</h4>
+                <p>Revue régulière des indicateurs qualité, gestion des non-conformités et actions correctives.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ PAGE CONTACT ═══════════════ -->
+<section id="contact" class="site-page">
+    <div class="page-wrap">
+        <div class="page-hero">
+            <h2 class="page-title">Contact & Accès</h2>
+            <p class="page-subtitle">Retrouvez le laboratoire, les horaires et les itinéraires rapidement.</p>
+        </div>
+        <div class="practical-grid">
+            <div class="practical-card">
+                <div class="practical-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+                    <h4>Horaires</h4>
+                </div>
+                <div class="practical-body">
+                    Lundi – Vendredi : <b>7h00 – 18h00</b><br>
+                    Samedi : <b>7h00 – 13h00</b><br>
+                    Dimanche &amp; jours fériés : Fermé
+                </div>
+            </div>
+            <div class="practical-card">
+                <div class="practical-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <h4>Adresse</h4>
+                </div>
+                <div class="practical-body">
+                    123, Boulevard Mohammed V<br>
+                    Quartier Maârif — Casablanca
+                </div>
+            </div>
+            <div class="practical-card">
+                <div class="practical-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.09 5.18 2 2 0 0 1 5.11 3h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.68 2.34a2 2 0 0 1-.45 2.11L8.09 11.5a16 16 0 0 0 6.41 6.41l2.33-2.33a2 2 0 0 1 2.11-.45c.74.32 1.53.55 2.34.68A2 2 0 0 1 22 16.92z"/></svg>
+                    <h4>Contact</h4>
+                </div>
+                <div class="practical-body">
+                    Tél : <b>+212 5 22 XX XX XX</b><br>
+                    Email : <b>contact@camc.ma</b>
+                </div>
+            </div>
+        </div>
+        <div class="map-card">
+            <iframe class="map-frame" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+                src="https://maps.google.com/maps?q=123%20Boulevard%20Mohammed%20V%2C%20Casablanca&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
+            <div class="route-links">
+                <a class="route-btn primary" href="https://www.google.com/maps/dir/?api=1&destination=123+Boulevard+Mohammed+V,+Casablanca" target="_blank" rel="noopener noreferrer">Itinéraire Google Maps</a>
+                <a class="route-btn" href="https://waze.com/ul?q=123+Boulevard+Mohammed+V,+Casablanca&navigate=yes" target="_blank" rel="noopener noreferrer">Itinéraire Waze</a>
+                <a class="route-btn" href="https://maps.apple.com/?daddr=123+Boulevard+Mohammed+V,+Casablanca" target="_blank" rel="noopener noreferrer">Itinéraire Apple Plans</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="news-dialog" id="newsDialog">
+    <div class="news-dialog-card">
+        <div class="news-dialog-head">
+            <div>
+                <h3 class="news-dialog-title" id="newsDialogTitle"></h3>
+                <div class="news-dialog-meta" id="newsDialogMeta"></div>
+            </div>
+            <button class="news-dialog-close" type="button" onclick="closeNewsDialog()">✕</button>
+        </div>
+        <div class="news-dialog-actions">
+            <button class="news-dialog-openlink news-dialog-back" id="newsDialogBack" type="button" onclick="closeNewsDialog()">Retour</button>
+            <a class="news-dialog-openlink" id="newsDialogSource" href="#" target="_blank" rel="noopener noreferrer" style="display:none"></a>
+        </div>
+        <div class="news-dialog-image" id="newsDialogImage" style="display:none"></div>
+        <div class="news-dialog-body" id="newsDialogBody"></div>
+    </div>
+</div>
+
+<div class="news-dialog" id="ficheDialog">
+    <div class="news-dialog-card">
+        <div class="news-dialog-head">
+            <div>
+                <h3 class="news-dialog-title" id="ficheDialogTitle"></h3>
+                <div class="news-dialog-meta" id="ficheDialogMeta"></div>
+            </div>
+            <button class="news-dialog-close" type="button" onclick="closeFicheDialog()">✕</button>
+        </div>
+        <div class="news-dialog-actions">
+            <button class="news-dialog-openlink news-dialog-back" id="ficheDialogBack" type="button" onclick="closeFicheDialog()">Retour</button>
+            <a class="news-dialog-openlink" id="ficheDialogOpenTab" href="#" target="_blank" rel="noopener noreferrer" style="display:none"></a>
+            <a class="news-dialog-openlink" id="ficheDialogDownload" href="#" target="_blank" rel="noopener noreferrer" style="display:none" download></a>
+        </div>
+        <div class="fiche-dialog-summary" id="ficheDialogSummary" style="display:none"></div>
+        <div class="pdf-toolbar" id="pdfToolbar">
+            <button class="pdf-toolbar-btn" type="button" onclick="togglePdfFullscreen()" id="pdfFsBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+                Plein écran
+            </button>
+        </div>
+        <div class="fiche-dialog-frame" id="ficheDialogFrame"></div>
+    </div>
+</div>
+
+<button class="back-top" id="backTop" type="button" aria-label="Retour en haut" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+<a class="whatsapp-float" href="https://wa.me/2125XXXXXXXX" target="_blank" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+</a>
+
+<!-- ═══════════════ PAGE COMPENDIUM ═══════════════ -->
+<section id="compendium" class="site-page">
+    <div class="home-wrap">
+        <h3 class="home-title" style="text-align:center">Rechercher par analyse</h3>
+        <div class="home-input-wrap comp-search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" class="home-search-input" id="compendiumHomeSearch" placeholder="Rechercher une analyse (ex: CRP)" onkeydown="if(event.key==='Enter'){openCompendiumWithQuery(this.value)}">
+        </div>
+
+        <h3 class="home-title">Informations pratiques</h3>
+        <div class="practical-grid">
+            <div class="practical-card">
+                <div class="practical-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+                    <h4>Horaires d'ouverture</h4>
+                </div>
+                <div class="practical-body">
+                    Lundi – Vendredi : <b>7h00 – 18h00</b><br>
+                    Samedi : <b>7h00 – 13h00</b><br>
+                    Dimanche &amp; jours fériés : Fermé
+                </div>
+            </div>
+            <div class="practical-card">
+                <div class="practical-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <h4>Adresse</h4>
+                </div>
+                <div class="practical-body">
+                    123, Boulevard Mohammed V<br>
+                    Quartier Maârif — Casablanca<br>
+                    <a href="https://maps.google.com/?q=Casablanca+Maarif" target="_blank">Voir sur Google Maps →</a>
+                </div>
+            </div>
+            <div class="practical-card">
+                <div class="practical-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.09 5.18 2 2 0 0 1 5.11 3h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.68 2.34a2 2 0 0 1-.45 2.11L8.09 11.5a16 16 0 0 0 6.41 6.41l2.33-2.33a2 2 0 0 1 2.11-.45c.74.32 1.53.55 2.34.68A2 2 0 0 1 22 16.92z"/></svg>
+                    <h4>Contact</h4>
+                </div>
+                <div class="practical-body">
+                    Tél : <b>+212 5 22 XX XX XX</b>
+                </div>
+                <a class="whatsapp-btn-home" href="https://wa.me/2125XXXXXXXX" target="_blank">WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="map-card">
+            <iframe class="map-frame" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+                src="https://maps.google.com/maps?q=123%20Boulevard%20Mohammed%20V%2C%20Casablanca&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
+            <div class="route-links">
+                <a class="route-btn primary" href="https://www.google.com/maps/dir/?api=1&destination=123+Boulevard+Mohammed+V,+Casablanca" target="_blank" rel="noopener noreferrer">Itinéraire Google Maps</a>
+                <a class="route-btn" href="https://waze.com/ul?q=123+Boulevard+Mohammed+V,+Casablanca&navigate=yes" target="_blank" rel="noopener noreferrer">Itinéraire Waze</a>
+                <a class="route-btn" href="https://maps.apple.com/?daddr=123+Boulevard+Mohammed+V,+Casablanca" target="_blank" rel="noopener noreferrer">Itinéraire Apple Plans</a>
+            </div>
+        </div>
+
+        <div class="home-news">
+            <div class="home-news-head">
+                <h3 class="home-title home-news-title" id="homeNewsTitle">Actualités</h3>
+                <button type="button" class="home-news-all" id="homeNewsAllBtn" onclick="showPage('actualites')">
+                    <span id="homeNewsAllLabel">Voir toutes les actualités</span>
+                    <span class="arrow">➜</span>
+                </button>
+            </div>
+            <div class="home-news-slider">
+                <button type="button" class="home-news-arrow" id="homeNewsPrev" aria-label="Actualité précédente">‹</button>
+                <div class="home-news-viewport" id="homeNewsViewport">
+                    <div class="home-news-track" id="homeNewsTrack"><div class="loading">Chargement des actualités...</div></div>
+                </div>
+                <button type="button" class="home-news-arrow" id="homeNewsNext" aria-label="Actualité suivante">›</button>
+            </div>
+        </div>
+
+        <h3 class="home-title">Liens rapides</h3>
+        <div class="quick-grid">
+            <button class="quick-link quick-action" data-page-target="actualites">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                Toutes les actualités
+            </button>
+            <button class="quick-link quick-action" data-page-target="fiches">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><path d="M9 14h6M9 18h4"/></svg>
+                Fiches info labo
+            </button>
+            <a class="quick-link" href="#" id="quickFormsLink">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                Formulaires labo
+            </a>
+            <button class="quick-link quick-action" data-page-target="prelevements">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h8"/><path d="M10 10 2 2"/><path d="M10 14 2 22"/><rect x="14" y="6" width="8" height="12" rx="2"/></svg>
+                Centre de prélèvement et de collecte
+            </button>
+            <button class="quick-link quick-action" data-page-target="services">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                En savoir plus sur le labo
+            </button>
+            <a class="quick-link" href="#" id="quickResultsLink">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Résultats labo
+            </a>
+            <button class="quick-link quick-action" data-page-target="qualite">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v6c0 5-3.5 8.7-8 10-4.5-1.3-8-5-8-10V7l8-4z"/><path d="m9 12 2 2 4-4"/></svg>
+                ISO 15189
+            </button>
+            <button class="quick-link quick-action" data-page-target="prelevements">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                Manuel de prélèvement
+            </button>
+        </div>
+
+        <h3 class="home-title">Avis Google</h3>
+        <div class="reviews-shell">
+            <div class="reviews-head">
+                <div>
+                    <div class="reviews-title">Ce que disent nos patients</div>
+                    <div class="reviews-summary" id="reviewsSummary">Connexion des avis Google…</div>
+                </div>
+                <div class="reviews-actions">
+                    <a class="reviews-btn primary" id="writeReviewBtn" href="#" target="_blank" rel="noopener noreferrer">Laisser un avis</a>
+                    <a class="reviews-btn" id="allReviewsBtn" href="#" target="_blank" rel="noopener noreferrer">Voir tous les avis</a>
+                </div>
+            </div>
+            <div class="reviews-state" id="reviewsState">Chargement…</div>
+            <div class="reviews-grid" id="googleReviews"></div>
+            <div class="reviews-embed">
+                <iframe id="reviewsEmbed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Avis Google CAMC"></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="search-bar">
+        <div class="search-inner">
+            <div class="search-field">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="q" placeholder="Rechercher une analyse (nom, code, tube, mot-clé clinique…)">
+            </div>
+            <div class="chips" id="chips"></div>
+        </div>
+        <div class="compendium-tools">
+            <button type="button" class="back-home-btn" onclick="showPage('home')">← Retour à l'accueil</button>
+        </div>
+    </div>
+    <div class="topbar" id="topbar"></div>
+    <div class="grid" id="grid"><div class="loading">Chargement des analyses…</div></div>
+</section>
+
+<!-- ═══════════════ MODAL DÉTAIL ═══════════════ -->
+<div class="overlay" id="overlay">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-head-left"><div id="mTag"></div><h2 id="mTitle"></h2></div>
+            <button class="close-btn" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-breadcrumb" id="modalBreadcrumb">
+            <span>Compendium</span><span class="bc-sep">/</span><span class="bc-current" id="bcDept"></span><span class="bc-sep">/</span><span class="bc-current" id="bcName"></span>
+        </div>
+        <!-- Toggle vue -->
+        <div class="view-toggle">
+            <button class="view-btn active" id="btnPatient" onclick="setView('patient')">👤 Vue Patient</button>
+            <button class="view-btn" id="btnMedecin" onclick="setView('medecin')">🩺 Vue Médecin</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-photo" id="mPhoto"></div>
+            <!-- VUE PATIENT -->
+            <div class="patient-view show" id="vPatient">
+                <div class="pv-name" id="pvName"></div>
+                <div class="pv-cards">
+                    <div class="pv-card">
+                        <div class="pv-card-icon">🍽️</div>
+                        <div class="pv-card-label">Faut-il être à jeun ?</div>
+                        <div class="pv-card-value" id="pvJeune"></div>
+                    </div>
+                    <div class="pv-card">
+                        <div class="pv-card-icon">⏱️</div>
+                        <div class="pv-card-label">Délai du résultat</div>
+                        <div class="pv-card-value" id="pvDelai" style="color:var(--text)"></div>
+                    </div>
+                </div>
+                <div class="pv-note" id="pvNote" style="display:none"></div>
+            </div>
+            <!-- VUE MEDECIN -->
+            <div class="medecin-view" id="vMedecin">
+                <div class="fields" id="mFields"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>© 2026 CAMC — Centre d'Analyses Médicales de Casablanca</footer>
+
+<script src="data.inline.js"></script>
+<script>
+// ╔═══════════════════════════════════════════════════════════════╗
+// ║  COMPENDIUM CAMC                                              ║
+// ║  → Éditez analyses.csv pour gérer vos analyses                ║
+// ║  → Photos dans le dossier photos/                             ║
+// ║  → Ne modifiez PAS ce fichier                                 ║
+// ╚═══════════════════════════════════════════════════════════════╝
+
+const PHOTO_DIR='photos/';
+const USE_REMOTE_ANALYSES=false;
+const USE_REMOTE_ACTUALITES=true;
+const USE_REMOTE_FICHES=false;
+const USE_SUPABASE_FICHES=true;
+
+// Source des analyses:
+// - Local: 'analyses.csv'
+// - Google Sheets: collez ici le lien "Publier sur le Web" en CSV (pub?output=csv)
+const ANALYSES_URL=USE_REMOTE_ANALYSES
+    ? 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5EulZJsoCF0XQhfVZ9nTRCkn7B44u67WeWGWzPAk0ttC2HLc2n2RXBSmaYQWAag/pub?gid=837838974&single=true&output=csv'
+    : '';
+const FALLBACK_ANALYSES_URL='analyses.csv';
+const GOOGLE_REVIEWS_API_URL=''; // Ex: https://votre-backend/reviews?place_id=xxxx
+const GOOGLE_PLACE_ID=''; // Ex: ChIJxxxxxxxxxxxxxxxx
+const GOOGLE_REVIEWS_FALLBACK_URL="https://www.google.com/maps/place/Centre+d'Analyses+Medicales+de+Casablanca/@33.5859135,-7.6502487,17z/data=!4m6!3m5!1s0xda7d2befcff14a3:0x1c4d1414a091bdc1!8m2!3d33.5858253!4d-7.6501993!16s%2Fg%2F11b6hyh2y6?entry=ttu&g_ep=EgoyMDI2MDIyNS4wIKXMDSoASAFQAw%3D%3D";
+const GOOGLE_REVIEWS_EMBED_URL='https://www.google.com/maps?output=embed&z=17&q=Centre+d%27Analyses+Medicales+de+Casablanca,+33.5858253,-7.6501993';
+const GOOGLE_REVIEWS_REFRESH_MS=1209600000; // 14 jours
+const ACTUALITES_URL=USE_REMOTE_ACTUALITES
+    ? 'https://docs.google.com/spreadsheets/d/1Mw35C_5g9fUA7NX-80XRA26osIjiNtSx33ZhtsHcOJQ/export?format=csv&gid=0'
+    : ''; // Ex: lien Google Sheets CSV des actualites
+const FALLBACK_ACTUALITES_URL='actualites.json';
+const ACTUALITES_EDIT_URL='https://docs.google.com/spreadsheets/d/1Mw35C_5g9fUA7NX-80XRA26osIjiNtSx33ZhtsHcOJQ/edit?gid=0#gid=0'; // Ex: lien edition Google Sheets (optionnel)
+const REMOTE_FICHES_LABO_URL=''; // Ex: lien Google Sheets CSV des fiches labo
+const FICHES_LABO_URL=USE_REMOTE_FICHES ? REMOTE_FICHES_LABO_URL : '';
+const FALLBACK_FICHES_LABO_URL='fiches_labo.json';
+const FICHES_EDIT_URL=''; // Ex: lien edition Google Sheets (optionnel)
+const SUPABASE_URL='https://bqwhoeiflrrdquyeralz.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_kbk7zR7pauTWy55INVq3hQ_bhzm2Goe';
+const SUPABASE_FICHES_TABLE='lab_fiches';
+const SUPABASE_FICHES_BUCKET='fiches-labo';
+const SUPABASE_FICHES_LIST_PREFIX='';
+const SUPABASE_FICHES_DASHBOARD_URL='https://supabase.com/dashboard/project/bqwhoeiflrrdquyeralz/storage/files/buckets/fiches-labo';
+const SUPABASE_FICHES_CACHE_KEY='camc_supabase_fiches_cache_v1';
+const SUPABASE_FICHES_CACHE_TTL_MS=300000;
+const FETCH_TIMEOUT_MS=8000;
+const RESULTATS_LABO_URL='http://localhost:3000';
+const FORMULAIRES_LABO_URL='#';
+const MIN_REQUIRED_COLUMNS=['code','nom','departement'];
+const OPTIONAL_COLUMNS=['nom_patient','echantillon','tube','couleur_tube','volume','jeune','conditions','conservation','delai','methode','valeurs_ref','interet','remarques','photo'];
+const KNOWN_DEPARTEMENTS=['Chimie','Hématologie','Microbiologie','Immunologie','Hormonologie','Autre'];
+const KNOWN_TUBE_COLORS=['rouge','violet','bleu','vert','gris','jaune','orange'];
+const I18N={
+    fr:{
+        'meta.title':"CAMC — Centre d'Analyses Médicales de Casablanca",
+        'nav.compendium':'Compendium',
+        'source.google':'Google Sheets',
+        'source.local':'fichier local',
+        'home.searchPlaceholder':'Rechercher une analyse (ex: CRP)',
+        'home.selectPlaceholder':'Sélectionnez un département...',
+        'comp.searchPlaceholder':'Rechercher une analyse (nom, code, tube, mot-clé clinique…)',
+        'grid.loading':'Chargement des analyses…',
+        'grid.loadErrorTitle':'Impossible de charger les analyses',
+        'grid.loadErrorMessage':'Vérifiez le lien Google Sheets publié en CSV, puis la présence de analyses.csv en local.',
+        'grid.localHint':'Astuce : ouvrez ce site via un serveur local (ex: <span class="field-value mono">python3 -m http.server 8000</span>) puis allez sur <span class="field-value mono">http://localhost:8000/</span>.',
+        'grid.emptyTitle':'Aucune analyse trouvée',
+        'grid.emptyDesc':'Essayez un autre terme ou changez le filtre.',
+        'topbar.source':'Source',
+        'topbar.analysis.one':'analyse',
+        'topbar.analysis.other':'analyses',
+        'chip.all':'Toutes',
+        'modal.fasting.yes':'Oui -',
+        'modal.fasting.no':'Non - pas de jeûne requis',
+        'modal.note.prefix':'À savoir :',
+        'modal.field.code':'Code',
+        'modal.field.sample':'Échantillon',
+        'modal.field.tube':'Tube / Contenant',
+        'modal.field.volume':'Volume requis',
+        'modal.field.conditions':'Conditions de prélèvement',
+        'modal.field.storage':'Conservation / Transport',
+        'modal.field.delay':'Délai de résultat',
+        'modal.field.method':'Méthode analytique',
+        'modal.field.reference':'Valeurs de référence',
+        'modal.field.interest':'Intérêt clinique',
+        'modal.field.remarks':'Remarques',
+        'reviews.author.default':'Patient',
+        'reviews.time.default':'Récemment',
+        'reviews.text.default':'Avis disponible sur Google.',
+        'reviews.summary.default':'Avis Google',
+        'reviews.state.embed':'Affichage Google intégré actif (sans API).',
+        'reviews.summary.live':'Avis Google en direct',
+        'reviews.state.loading':'Chargement des derniers avis…',
+        'reviews.state.empty':'Aucun avis disponible dans la réponse API.',
+        'reviews.state.auto':'Mise à jour automatique active.',
+        'reviews.summary.unavailable':'Avis Google indisponibles',
+        'reviews.state.error':'Erreur de chargement: {error}. Le bouton "Voir tous les avis" reste disponible.',
+        'reviews.count':'{rating} ({total} avis Google)',
+        'reviews.count.short':'{rating} ({total} avis)',
+        'news.loading':'Chargement des actualités...',
+        'news.empty':'Aucune actualité trouvée.',
+        'home.news.empty':'Aucune actualité à afficher.',
+        'home.news.title':'Actualités',
+        'home.news.all':'Voir toutes les actualités',
+        'news.readMore':'Lire plus',
+        'news.back':'Retour aux actualités',
+        'news.close':'Fermer',
+        'news.openSource':'Ouvrir l’article source',
+        'news.searchPlaceholder':'Rechercher une actualité...',
+        'news.update':'Mettre à jour (Google Sheets)',
+        'news.updatedDate':'Mis à jour le {date}',
+        'fiches.loading':'Chargement des fiches...',
+        'fiches.empty':'Aucune fiche trouvée.',
+        'fiches.searchPlaceholder':'Rechercher une fiche...',
+        'fiches.update':'Mettre à jour (Google Sheets)',
+        'fiches.open':'Ouvrir',
+        'fiches.preview':'Aperçu',
+        'fiches.openTab':'Ouvrir (nouvel onglet)',
+        'fiches.download':'Télécharger',
+        'fiches.soon':'Bientôt',
+        'fiches.cat.all':'Toutes',
+        'fiches.updated':'Màj: {date}'
+    },
+    en:{
+        'meta.title':'CAMC — Casablanca Medical Analysis Center',
+        'nav.compendium':'Compendium',
+        'source.google':'Google Sheets',
+        'source.local':'local file',
+        'home.searchPlaceholder':'Search a test (e.g. CRP)',
+        'home.selectPlaceholder':'Select a department...',
+        'comp.searchPlaceholder':'Search a test (name, code, tube, clinical keyword...)',
+        'grid.loading':'Loading tests...',
+        'grid.loadErrorTitle':'Unable to load tests',
+        'grid.loadErrorMessage':'Check the published Google Sheets CSV link, then ensure analyses.csv exists locally.',
+        'grid.localHint':'Tip: open this site via a local server (e.g. <span class="field-value mono">python3 -m http.server 8000</span>) then go to <span class="field-value mono">http://localhost:8000/</span>.',
+        'grid.emptyTitle':'No tests found',
+        'grid.emptyDesc':'Try another term or change the filter.',
+        'topbar.source':'Source',
+        'topbar.analysis.one':'test',
+        'topbar.analysis.other':'tests',
+        'chip.all':'All',
+        'modal.fasting.yes':'Yes -',
+        'modal.fasting.no':'No - no fasting required',
+        'modal.note.prefix':'Good to know:',
+        'modal.field.code':'Code',
+        'modal.field.sample':'Sample',
+        'modal.field.tube':'Tube / Container',
+        'modal.field.volume':'Required volume',
+        'modal.field.conditions':'Collection conditions',
+        'modal.field.storage':'Storage / Transport',
+        'modal.field.delay':'Turnaround time',
+        'modal.field.method':'Analytical method',
+        'modal.field.reference':'Reference values',
+        'modal.field.interest':'Clinical relevance',
+        'modal.field.remarks':'Remarks',
+        'reviews.author.default':'Patient',
+        'reviews.time.default':'Recently',
+        'reviews.text.default':'Review available on Google.',
+        'reviews.summary.default':'Google Reviews',
+        'reviews.state.embed':'Google embed active (no API).',
+        'reviews.summary.live':'Live Google reviews',
+        'reviews.state.loading':'Loading latest reviews...',
+        'reviews.state.empty':'No reviews in API response.',
+        'reviews.state.auto':'Automatic refresh active.',
+        'reviews.summary.unavailable':'Google reviews unavailable',
+        'reviews.state.error':'Loading error: {error}. The "See all reviews" button is still available.',
+        'reviews.count':'{rating} ({total} Google reviews)',
+        'reviews.count.short':'{rating} ({total} reviews)',
+        'news.loading':'Loading news...',
+        'news.empty':'No news found.',
+        'home.news.empty':'No news to display.',
+        'home.news.title':'News',
+        'home.news.all':'See all news',
+        'news.readMore':'Read more',
+        'news.back':'Back to news',
+        'news.close':'Close',
+        'news.openSource':'Open source article',
+        'news.searchPlaceholder':'Search news...',
+        'news.update':'Update (Google Sheets)',
+        'news.updatedDate':'Updated on {date}',
+        'fiches.loading':'Loading resources...',
+        'fiches.empty':'No resources found.',
+        'fiches.searchPlaceholder':'Search a resource...',
+        'fiches.update':'Update (Google Sheets)',
+        'fiches.open':'Open',
+        'fiches.preview':'Preview',
+        'fiches.openTab':'Open (new tab)',
+        'fiches.download':'Download',
+        'fiches.soon':'Coming soon',
+        'fiches.cat.all':'All',
+        'fiches.updated':'Updated: {date}'
+    },
+    ar:{
+        'meta.title':'CAMC - مركز الدار البيضاء للتحاليل الطبية',
+        'nav.compendium':'الدليل',
+        'home.searchPlaceholder':'ابحث عن تحليل (مثال: CRP)',
+        'news.loading':'جار تحميل الأخبار...',
+        'news.empty':'لا توجد أخبار حاليا.',
+        'home.news.empty':'لا توجد أخبار للعرض.',
+        'home.news.title':'الأخبار',
+        'home.news.all':'عرض كل الأخبار',
+        'news.readMore':'اقرأ المزيد',
+        'news.back':'العودة إلى الأخبار',
+        'news.close':'إغلاق',
+        'news.openSource':'فتح المقال الأصلي',
+        'news.searchPlaceholder':'ابحث في الأخبار...',
+        'news.update':'تحديث (Google Sheets)',
+        'news.updatedDate':'آخر تحديث: {date}',
+        'fiches.preview':'معاينة',
+        'fiches.openTab':'فتح (تبويب جديد)',
+        'fiches.download':'تحميل'
+    }
+};
+const STATIC_FR_EN={
+    'Accueil':'Home',
+    'Services':'Services',
+    'Actualités':'News',
+    'Fiches Labo':'Lab Sheets',
+    'Prélèvements':'Sampling',
+    'Contact':'Contact',
+    "Centre d'Analyses Médicales de Casablanca":'Casablanca Medical Analysis Center',
+    'Votre laboratoire de proximité pour des analyses fiables et rapides':'Your local laboratory for reliable and fast testing',
+    "Accueil patient, prélèvements, qualité analytique et accompagnement médical: CAMC centralise l'essentiel sur une seule plateforme claire.":'Patient intake, sampling, analytical quality, and medical support: CAMC brings key information together in one clear platform.',
+    'Accéder au Compendium':'Access Compendium',
+    'Service patient':'Patient Service',
+    'Accueil fluide, prélèvements encadrés et consignes claires avant chaque examen.':'Smooth intake, supervised sampling, and clear instructions before each test.',
+    'Fiabilité analytique':'Analytical Reliability',
+    'Procédures standardisées, traçabilité complète et démarche qualité alignée ISO 15189.':'Standardized procedures, full traceability, and a quality approach aligned with ISO 15189.',
+    'Délai maîtrisé':'Controlled Turnaround',
+    'Organisation des flux pour un rendu rapide des résultats et un suivi réactif.':'Workflow organization for fast result delivery and responsive follow-up.',
+    'Notre équipe':'Our Team',
+    "Une équipe pluridisciplinaire mobilisée pour la qualité du prélèvement, l'analyse biologique et l'accompagnement quotidien des patients.":'A multidisciplinary team focused on sampling quality, biological analysis, and daily patient support.',
+    'Direction médicale':'Medical Leadership',
+    'Supervision qualité, validation biologique et interprétation des résultats selon le contexte clinique.':'Quality oversight, biological validation, and result interpretation based on clinical context.',
+    'Responsable prélèvements':'Sampling Lead',
+    'Accueil patient, contrôle pré-analytique et sécurisation des étapes de prélèvement.':'Patient intake, pre-analytical control, and secure sampling workflow.',
+    'Référent technique':'Technical Lead',
+    'Pilotage des automates, maintenance interne et suivi régulier des contrôles analytiques.':'Analyzer operations, internal maintenance, and regular monitoring of analytical controls.',
+    'Rechercher par analyse':'Search by test',
+    'Rechercher par département':'Search by department',
+    'Sélectionnez un département...':'Select a department...',
+    'Informations pratiques':'Practical Information',
+    "Horaires d'ouverture":'Opening Hours',
+    'Lundi – Vendredi :':'Monday - Friday:',
+    'Samedi :':'Saturday:',
+    'Dimanche & jours fériés : Fermé':'Sunday & public holidays: Closed',
+    'Adresse':'Address',
+    'Quartier Maârif — Casablanca':'Maarif District - Casablanca',
+    'Voir sur Google Maps →':'View on Google Maps ->',
+    'Tél :':'Phone:',
+    'Itinéraire Google Maps':'Google Maps Directions',
+    'Itinéraire Waze':'Waze Directions',
+    'Itinéraire Apple Plans':'Apple Maps Directions',
+    'Liens rapides':'Quick Links',
+    'Toutes les actualités':'All News',
+    'Fiches info labo':'Lab Info Sheets',
+    'Formulaires labo':'Lab Forms',
+    'Centre de prélèvement et de collecte':'Sampling and Collection Center',
+    'En savoir plus sur le labo':'Learn More About the Lab',
+    'Résultats labo':'Lab Results',
+    'ISO 15189':'ISO 15189',
+    'Manuel de prélèvement':'Sampling Manual',
+    'Toutes les analyses':'All Tests',
+    'Chimie':'Chemistry',
+    'Hématologie':'Hematology',
+    'Microbiologie':'Microbiology',
+    'Avis Google':'Google Reviews',
+    'Ce que disent nos patients':'What Our Patients Say',
+    'Connexion des avis Google…':'Connecting Google reviews...',
+    'Laisser un avis':'Leave a Review',
+    'Voir tous les avis':'See All Reviews',
+    'Chargement…':'Loading...',
+    'Nos Services':'Our Services',
+    'Un parcours rapide pour les patients, les médecins et les entreprises.':'A fast pathway for patients, doctors, and companies.',
+    'Ouvrir le Compendium':'Open Compendium',
+    'Parler sur WhatsApp':'Chat on WhatsApp',
+    'Analyses courantes':'Routine Tests',
+    'Bilans de routine, suivi chronique et analyses spécialisées avec délais clairs.':'Routine panels, chronic follow-up, and specialized tests with clear turnaround times.',
+    'Biochimie, hématologie, immunologie':'Biochemistry, hematology, immunology',
+    'Résultats priorisés selon urgence':'Results prioritized by urgency',
+    'Prélèvements sur place, avec protocole standardisé et contrôle qualité.':'On-site sampling with standardized protocols and quality control.',
+    'Accueil patient rapide':'Fast patient intake',
+    'Traçabilité tube à tube':'Tube-by-tube traceability',
+    'Accompagnement médecins':'Physician support',
+    'Une vue métier claire sur chaque test avec conditions, méthode et interprétation utile.':'A clear clinical view for each test with conditions, method, and useful interpretation.',
+    'Compendium orienté pratique':'Practice-oriented compendium',
+    'Données structurées pour décision':'Structured data for decision-making',
+    'Urgences biologiques':'Biological emergencies',
+    "Traitement prioritaire des demandes urgentes selon les heures d'ouverture du laboratoire.":'Priority handling for urgent requests during laboratory opening hours.',
+    'Suivi qualité':'Quality monitoring',
+    'Procédures internes de vérification pour fiabilité, cohérence et délais de rendu.':'Internal verification procedures for reliability, consistency, and turnaround time.',
+    'Support patient':'Patient support',
+    'Informations simples avant prélèvement: à jeun, délai, préparation, conduite à tenir.':'Simple pre-sampling guidance: fasting, timing, preparation, and next steps.',
+    'Parcours rapides':'Quick Journeys',
+    'Patient':'Patient',
+    'Médecin':'Doctor',
+    'Résultats':'Results',
+    'Préparer ma visite':'Prepare my visit',
+    'Retrouvez les consignes de prélèvement, les horaires, et les informations pratiques avant de vous déplacer.':'Find sampling instructions, opening hours, and practical information before your visit.',
+    'Voir le guide prélèvements':'View sampling guide',
+    'Trouver une analyse':'Find a test',
+    'Accédez rapidement aux conditions de prélèvement, aux délais et à la vue métier via le compendium.':'Quickly access sampling conditions, turnaround times, and professional view through the compendium.',
+    'Consulter mes résultats':'View my results',
+    "Accédez au canal de résultats du laboratoire et contactez l'équipe en cas de besoin d'assistance.":'Access the laboratory results channel and contact the team if you need assistance.',
+    'Accéder aux résultats':'Access results',
+    'Référentiel':'Framework',
+    'Démarche qualité structurée autour des exigences de biologie médicale.':'Quality approach structured around medical biology requirements.',
+    '7j/7*':'7d/7*',
+    'Ouverture élargie selon plages du laboratoire et permanence d\'information.':'Extended opening according to laboratory schedules with continuous information support.',
+    'Processus':'Process',
+    'Suivi pré-analytique, analytique et post-analytique pour chaque dossier.':'Pre-analytical, analytical, and post-analytical tracking for each case.',
+    'Patient & Prescripteur':'Patient & Prescriber',
+    'Équipe disponible pour orienter les patients et répondre aux prescripteurs.':'Team available to guide patients and respond to prescribers.',
+    'Guide Prélèvements':'Sampling Guide',
+    'Les consignes essentielles avant de venir au laboratoire.':'Essential instructions before coming to the laboratory.',
+    'Avant de venir':'Before you come',
+    "Vérifier si l'analyse nécessite le jeûne":'Check whether the test requires fasting',
+    "Apporter ordonnance et pièce d'identité":'Bring your prescription and ID',
+    'Signaler traitement en cours':'Report any ongoing treatment',
+    'Le jour du prélèvement':'On sampling day',
+    'Hydratation légère recommandée':'Light hydration recommended',
+    "Respecter l'heure prescrite si demandée":'Follow the prescribed time if requested',
+    "Informer l'équipe en cas de malaise":'Inform staff in case of discomfort',
+    'Après prélèvement':'After sampling',
+    'Compression locale 2 à 3 minutes':'Apply local pressure for 2 to 3 minutes',
+    'Éviter effort intense immédiat':'Avoid intense physical effort right away',
+    'Suivre le délai annoncé pour les résultats':'Follow the announced result turnaround',
+    'Examens fréquents':'Frequent tests',
+    'Utilisez le compendium pour vérifier, test par test, le tube requis et les conditions de prélèvement.':'Use the compendium to check, test by test, required tube and sampling conditions.',
+    'Consulter les analyses':'Browse tests',
+    'Cas particuliers':'Special cases',
+    "Grossesse, pédiatrie, anticoagulants ou maladies chroniques: l'équipe adapte les consignes au contexte clinique.":'Pregnancy, pediatrics, anticoagulants, or chronic conditions: our team adapts instructions to the clinical context.',
+    "Besoin d'aide":'Need help',
+    'Contactez-nous avant déplacement pour confirmer la préparation exacte de votre bilan.':'Contact us before your visit to confirm exact preparation.',
+    'Contact & Accès':'Contact & Access',
+    'Actualités du laboratoire':'Laboratory News',
+    'Mises à jour, informations utiles et communication CAMC.':'Updates, useful information, and CAMC communications.',
+    'Mettre à jour (Google Sheets)':'Update (Google Sheets)',
+    'Rechercher une actualité...':'Search news...',
+    'Fiches Info Labo':'Lab Info Sheets',
+    'Documents pratiques et fiches techniques pour patients et prescripteurs.':'Practical documents and technical sheets for patients and prescribers.',
+    'Rechercher une fiche...':'Search a sheet...',
+    'Qualité et conformité':'Quality and Compliance',
+    'Notre démarche qualité est alignée sur la norme ISO 15189.':'Our quality approach aligns with ISO 15189.',
+    'Référence internationale pour la qualité et la compétence des laboratoires de biologie médicale.':'International reference standard for quality and competence in medical biology laboratories.',
+    'Traçabilité':'Traceability',
+    'Chaque étape du processus analytique est suivie, du prélèvement au rendu du résultat.':'Each step of the analytical process is tracked, from sampling to final reporting.',
+    'Amélioration continue':'Continuous improvement',
+    'Revue régulière des indicateurs qualité, gestion des non-conformités et actions correctives.':'Regular review of quality indicators, non-conformity management, and corrective actions.',
+    'Retrouvez le laboratoire, les horaires et les itinéraires rapidement.':'Find the lab, opening hours, and directions quickly.',
+    'Horaires':'Hours',
+    'Email :':'Email:',
+    "← Retour à l'accueil":'<- Back to home',
+    'Chargement des analyses…':'Loading tests...',
+    '👤 Vue Patient':'👤 Patient View',
+    '🩺 Vue Médecin':'🩺 Doctor View',
+    'Faut-il être à jeun ?':'Fasting required?',
+    'Délai du résultat':'Result turnaround',
+    "© 2026 CAMC — Centre d'Analyses Médicales de Casablanca":'© 2026 CAMC — Casablanca Medical Analysis Center'
+};
+const STATIC_EN_FR=Object.fromEntries(Object.entries(STATIC_FR_EN).map(([fr,en])=>[en,fr]));
+const DEPARTMENT_LABELS={
+    'Chimie':{fr:'Chimie',en:'Chemistry'},
+    'Hématologie':{fr:'Hématologie',en:'Hematology'},
+    'Microbiologie':{fr:'Microbiologie',en:'Microbiology'},
+    'Immunologie':{fr:'Immunologie',en:'Immunology'},
+    'Hormonologie':{fr:'Hormonologie',en:'Hormone testing'},
+    'Autre':{fr:'Autre',en:'Other'}
+};
+let lang='fr';
+function safeLocalStorageGet(key){
+    try{
+        return localStorage.getItem(key);
+    }catch{
+        return null;
+    }
+}
+
+function safeLocalStorageSet(key,value){
+    try{
+        localStorage.setItem(key,value);
+    }catch{
+        // Ignore storage errors (private mode / restricted contexts)
+    }
+}
+
+const savedLang=safeLocalStorageGet('camc_lang');
+const preferredLang=(savedLang==='en' || savedLang==='ar')?savedLang:'fr';
+let activeSourceKey='';
+let activeModalIndex=-1;
+let ACTUALITES_DATA=[];
+let FICHES_DATA=[];
+let CURRENT_NEWS_ITEMS=[];
+let CURRENT_FICHES_ITEMS=[];
+let newsQuery='';
+let fichesQuery='';
+let fichesCategory='all';
+let newsLoaded=false;
+let fichesLoaded=false;
+let navigatingHistory=false;
+const AR_PREVIEW_TEXT={
+    '[data-page="home"]':'الرئيسية',
+    '[data-page="actualites"]':'الأخبار',
+    '#actualitesPageTitle':'أخبار المختبر',
+    '#actualitesPageSubtitle':'آخر التحديثات والمعلومات المفيدة من CAMC.'
+};
+
+function t(key,vars={}){
+    let text=(I18N[lang]&&I18N[lang][key])||I18N.fr[key]||key;
+    Object.entries(vars).forEach(([k,v])=>{text=text.replaceAll(`{${k}}`,String(v));});
+    return text;
+}
+
+function getNewsKey(item){
+    return `${String(item?.date||'')}|${String(item?.title||'')}`;
+}
+
+function getPageFromHash(){
+    const raw=String(location.hash||'').replace(/^#/,'').trim().toLowerCase();
+    if(!raw) return 'home';
+    return SITE_PAGES.includes(raw) ? raw : 'home';
+}
+
+function updateHistoryForPage(page,replace=false,extraState={}){
+    if(navigatingHistory) return;
+    const base=location.pathname+location.search;
+    const hash=(page && page!=='home') ? `#${page}` : '';
+    const state={page,newsOpen:false,...extraState};
+    if(replace){
+        history.replaceState(state,'',`${base}${hash}`);
+    }else{
+        history.pushState(state,'',`${base}${hash}`);
+    }
+}
+
+function translateStaticNodes(from,to){
+    if(from===to) return;
+    const map=(from==='fr'&&to==='en')?STATIC_FR_EN:STATIC_EN_FR;
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    let node;
+    while((node=walker.nextNode())){
+        const parent=node.parentElement;
+        if(!parent) continue;
+        if(parent.tagName==='SCRIPT' || parent.tagName==='STYLE') continue;
+        const raw=node.nodeValue||'';
+        const compact=raw.trim().replace(/\s+/g,' ');
+        const repl=map[compact];
+        if(!repl) continue;
+        const lead=(raw.match(/^\s*/)||[''])[0];
+        const trail=(raw.match(/\s*$/)||[''])[0];
+        node.nodeValue=`${lead}${repl}${trail}`;
+    }
+}
+
+function updateLanguageButtons(){
+    document.querySelectorAll('.lang-btn').forEach((btn)=>{
+        btn.classList.toggle('on',btn.dataset.lang===lang);
+    });
+}
+
+function applyArabicPreview(enabled){
+    const scopedSections=['home','actualites'];
+    scopedSections.forEach((id)=>{
+        const section=document.getElementById(id);
+        if(!section) return;
+        if(enabled){
+            section.setAttribute('dir','rtl');
+            section.setAttribute('lang','ar');
+        }else{
+            section.removeAttribute('dir');
+            section.removeAttribute('lang');
+        }
+    });
+    Object.entries(AR_PREVIEW_TEXT).forEach(([selector,text])=>{
+        document.querySelectorAll(selector).forEach((el)=>{
+            if(enabled){
+                if(!el.dataset.baseText) el.dataset.baseText=el.textContent;
+                el.textContent=text;
+            }else if(el.dataset.baseText){
+                el.textContent=el.dataset.baseText;
+            }
+        });
+    });
+}
+
+function departmentLabel(value){
+    return DEPARTMENT_LABELS[value]?.[lang] || value || '';
+}
+
+function setLanguage(nextLang){
+    const target=(nextLang==='en' || nextLang==='ar')?nextLang:'fr';
+    const previous=lang;
+    if(previous==='ar' && target!=='ar'){
+        applyArabicPreview(false);
+    }
+    if(previous!==target){
+        if(target==='en'){
+            if(previous==='ar' || previous==='fr') translateStaticNodes('fr','en');
+        }else if(target==='fr'){
+            if(previous==='en') translateStaticNodes('en','fr');
+        }else if(target==='ar'){
+            if(previous==='en') translateStaticNodes('en','fr');
+            applyArabicPreview(true);
+        }
+    }
+    lang=target;
+    safeLocalStorageSet('camc_lang',lang);
+    document.documentElement.lang=lang;
+    document.title=t('meta.title');
+    updateLanguageButtons();
+    const qEl=document.getElementById('q');
+    if(qEl) qEl.placeholder=t('comp.searchPlaceholder');
+    const compHomeEl=document.getElementById('compendiumHomeSearch');
+    if(compHomeEl && !compHomeEl.value) compHomeEl.placeholder=t('home.searchPlaceholder');
+    const newsSearchEl=document.getElementById('newsSearch');
+    if(newsSearchEl) newsSearchEl.placeholder=t('news.searchPlaceholder');
+    const homeNewsTitleEl=document.getElementById('homeNewsTitle');
+    if(homeNewsTitleEl) homeNewsTitleEl.textContent=t('home.news.title');
+    const homeNewsAllLabelEl=document.getElementById('homeNewsAllLabel');
+    if(homeNewsAllLabelEl) homeNewsAllLabelEl.textContent=t('home.news.all');
+    const newsBackEl=document.getElementById('newsDialogBack');
+    if(newsBackEl) newsBackEl.textContent=t('news.back');
+    const ficheBackEl=document.getElementById('ficheDialogBack');
+    if(ficheBackEl) ficheBackEl.textContent=t('news.back');
+    document.querySelectorAll('.news-dialog-close').forEach((btn)=>btn.setAttribute('aria-label',t('news.close')));
+    const homeNewsPrev=document.getElementById('homeNewsPrev');
+    if(homeNewsPrev) homeNewsPrev.setAttribute('aria-label',lang==='fr'?'Actualité précédente':(lang==='ar'?'الخبر السابق':'Previous news'));
+    const homeNewsNext=document.getElementById('homeNewsNext');
+    if(homeNewsNext) homeNewsNext.setAttribute('aria-label',lang==='fr'?'Actualité suivante':(lang==='ar'?'الخبر التالي':'Next news'));
+    const fichesSearchEl=document.getElementById('fichesSearch');
+    if(fichesSearchEl) fichesSearchEl.placeholder=t('fiches.searchPlaceholder');
+    const newsEditEl=document.getElementById('newsEditLink');
+    if(newsEditEl){
+        newsEditEl.textContent=t('news.update');
+        const editNewsUrl=ACTUALITES_EDIT_URL || ACTUALITES_URL || '#';
+        newsEditEl.href=editNewsUrl;
+        if(editNewsUrl!=='#'){newsEditEl.setAttribute('target','_blank');}else{newsEditEl.removeAttribute('target');}
+    }
+    const fichesEditEl=document.getElementById('fichesEditLink');
+    if(fichesEditEl){
+        fichesEditEl.textContent=t('fiches.update');
+        const editFichesUrl=FICHES_EDIT_URL || FICHES_LABO_URL || (USE_SUPABASE_FICHES ? SUPABASE_FICHES_DASHBOARD_URL : '#');
+        fichesEditEl.href=editFichesUrl;
+        if(editFichesUrl!=='#'){fichesEditEl.setAttribute('target','_blank');}else{fichesEditEl.removeAttribute('target');}
+    }
+    const formsLink=document.getElementById('quickFormsLink');
+    if(formsLink){
+        formsLink.href=FORMULAIRES_LABO_URL;
+        if(FORMULAIRES_LABO_URL && FORMULAIRES_LABO_URL!=='#'){formsLink.setAttribute('target','_blank');}else{formsLink.removeAttribute('target');}
+    }
+    const resultsLink=document.getElementById('quickResultsLink');
+    if(resultsLink){
+        resultsLink.href=RESULTATS_LABO_URL;
+        if(RESULTATS_LABO_URL && RESULTATS_LABO_URL!=='#'){resultsLink.setAttribute('target','_blank');}else{resultsLink.removeAttribute('target');}
+    }
+    const homeResultsLink=document.getElementById('homeResultsLink');
+    if(homeResultsLink){
+        homeResultsLink.href=RESULTATS_LABO_URL;
+        if(RESULTATS_LABO_URL && RESULTATS_LABO_URL!=='#'){homeResultsLink.setAttribute('target','_blank');}else{homeResultsLink.removeAttribute('target');}
+    }
+    const searchBtn=document.querySelector('.home-search-go');
+    if(searchBtn) searchBtn.setAttribute('aria-label',lang==='fr'?'Lancer la recherche':'Run search');
+    const reviewsFrame=document.getElementById('reviewsEmbed');
+    if(reviewsFrame) reviewsFrame.title=lang==='fr'?'Avis Google CAMC':'CAMC Google reviews';
+    if(dataReady){
+        buildChips();
+        render();
+    }else{
+        showGridLoading(t('grid.loading'));
+    }
+    loadGoogleReviews();
+    renderActualites();
+    renderHomeNews();
+    buildFichesCategories();
+    renderFiches();
+    if(activeModalIndex>=0 && DATA[activeModalIndex]){
+        const keepView=currentView;
+        openModal(activeModalIndex);
+        setView(keepView);
+    }
+}
+
+function cacheBust(url){
+    try{
+        const u=new URL(url,location.href);
+        u.searchParams.set('_',Date.now().toString());
+        return u.toString();
+    }catch{
+        return String(url||'');
+    }
+}
+
+function errorMessage(err){
+    if(err instanceof Error && err.message) return err.message;
+    return String(err||'Unknown error');
+}
+
+function runSafe(label,fn){
+    try{
+        return fn();
+    }catch(err){
+        console.error(`[CAMC][${label}]`,err);
+        return null;
+    }
+}
+
+async function runSafeAsync(label,fn){
+    try{
+        return await fn();
+    }catch(err){
+        console.error(`[CAMC][${label}]`,err);
+        return null;
+    }
+}
+
+async function fetchTextWithTimeout(url,timeoutMs=FETCH_TIMEOUT_MS){
+    const finalUrl=cacheBust(url);
+    if(!finalUrl) throw new Error(lang==='fr'?'URL vide':'Empty URL');
+    if(typeof AbortController==='undefined'){
+        const response=await fetch(finalUrl,{cache:'no-store'});
+        if(!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.text();
+    }
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),timeoutMs);
+    try{
+        const response=await fetch(finalUrl,{cache:'no-store',signal:controller.signal});
+        if(!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.text();
+    }catch(err){
+        if(err && err.name==='AbortError'){
+            throw new Error(lang==='fr'?'Délai dépassé':'Timeout');
+        }
+        throw err;
+    }finally{
+        clearTimeout(timer);
+    }
+}
+
+/* ── Navigation ── */
+let currentPage='home',dataReady=false;
+const SITE_PAGES=['home','services','actualites','fiches','prelevements','qualite','contact','compendium'];
+
+function findNewsByKey(key){
+    if(!key) return null;
+    return ACTUALITES_DATA.find((item)=>getNewsKey(item)===key) || null;
+}
+
+function applyHistoryState(state){
+    const statePage=(state && SITE_PAGES.includes(state.page)) ? state.page : getPageFromHash();
+    navigatingHistory=true;
+    showPage(statePage,{fromHistory:true});
+    navigatingHistory=false;
+    if(state && state.newsOpen){
+        const item=findNewsByKey(state.newsKey);
+        if(item){
+            openNewsDialog(item,{fromHistory:true});
+            return;
+        }
+    }
+    closeNewsDialog({fromHistory:true});
+}
+
+function initNavigationState(){
+    const initialPage=getPageFromHash();
+    navigatingHistory=true;
+    showPage(initialPage,{fromHistory:true});
+    navigatingHistory=false;
+    const existingState=history.state;
+    if(existingState && (existingState.page || existingState.newsOpen)){
+        applyHistoryState(existingState);
+    }else{
+        updateHistoryForPage(initialPage,true);
+    }
+}
+
+function showPage(p,opts={}){
+    const page=SITE_PAGES.includes(p)?p:'home';
+    const {fromHistory=false,replaceHistory=false}=opts;
+    SITE_PAGES.forEach((id)=>{
+        const el=document.getElementById(id);
+        if(el) el.style.display = (id===page) ? 'block' : 'none';
+    });
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.page===page));
+    if(page==='compendium'){
+        syncQueryInputs();
+        if(dataReady) render();
+    }
+    if(!fromHistory && currentPage!==page){
+        updateHistoryForPage(page,replaceHistory);
+    }
+    window.scrollTo(0,0);
+    currentPage=page;
+}
+
+function setQueryState(v){
+    query = String(v||'').trim();
+}
+
+function syncQueryInputs(){
+    const qEl=document.getElementById('q');
+    if(qEl && qEl!==document.activeElement) qEl.value = query;
+    const compHomeEl=document.getElementById('compendiumHomeSearch');
+    if(compHomeEl && compHomeEl!==document.activeElement) compHomeEl.value = query;
+}
+
+function setFilterValue(v){
+    filter = (v && String(v).trim()) ? String(v).trim() : 'all';
+    const chipsEl=document.getElementById('chips');
+    if(chipsEl){
+        chipsEl.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.f===filter));
+    }
+}
+
+function openCompendiumWithQuery(v){
+    setFilterValue('all');
+    showPage('compendium');
+    setQueryState(v);
+    syncQueryInputs();
+    if(dataReady){
+        render();
+    }else{
+        showGridLoading(t('grid.loading'));
+    }
+    setTimeout(()=>document.getElementById('q')?.focus(),50);
+}
+
+function openCompendiumWithFilter(v){
+    showPage('compendium');
+    setFilterValue(v);
+    if(dataReady){
+        render();
+    }else{
+        showGridLoading(t('grid.loading'));
+    }
+}
+
+/* ── CSV ── */
+function normalizeHeader(value){
+    return String(value||'').replace(/^\uFEFF/,'').trim().toLowerCase();
+}
+function parseCSV(t){
+    const rowsRaw=[];
+    let row=[],cell='',q=false;
+    for(let i=0;i<t.length;i++){
+        const ch=t[i];
+        if(ch==='"'){
+            if(q && t[i+1]==='"'){
+                cell+='"';
+                i++;
+            }else{
+                q=!q;
+            }
+        }else if(ch===',' && !q){
+            row.push(cell);
+            cell='';
+        }else if((ch==='\n' || ch==='\r') && !q){
+            if(ch==='\r' && t[i+1]==='\n') i++;
+            row.push(cell);
+            cell='';
+            if(row.some(v=>String(v).trim()!=='')) rowsRaw.push(row);
+            row=[];
+        }else{
+            cell+=ch;
+        }
+    }
+    if(cell!=='' || row.length){
+        row.push(cell);
+        if(row.some(v=>String(v).trim()!=='')) rowsRaw.push(row);
+    }
+    if(rowsRaw.length<2) return {headers:[],rows:[]};
+    const h=rowsRaw[0].map(normalizeHeader);
+    const rows=rowsRaw.slice(1).map((vals)=>{
+        const o={};
+        h.forEach((k,i)=>o[k]=(vals[i]||'').trim());
+        return o;
+    }).filter((parsed)=>Object.values(parsed).some(v=>v!==''))
+      .filter((parsed)=>normalizeHeader(parsed.code)!=='code' || normalizeHeader(parsed.nom)!=='nom');
+    return {headers:h,rows};
+}
+
+function rowGet(row,...keys){
+    for(const key of keys){
+        const norm=normalizeHeader(key);
+        if(norm in row && String(row[norm]).trim()!=='') return String(row[norm]).trim();
+    }
+    return '';
+}
+
+function asArray(value){
+    if(Array.isArray(value)) return value;
+    if(value && Array.isArray(value.rows)) return value.rows;
+    return [];
+}
+
+function getEmbeddedSourceText(url){
+    const embedded=window.CAMC_EMBEDDED || null;
+    if(!embedded) return '';
+    const raw=String(url||'').trim().toLowerCase();
+    const withoutQuery=raw.split('?')[0].split('#')[0];
+    const fileName=withoutQuery.split('/').pop();
+    if(fileName==='analyses.csv') return String(embedded.analysesCsv||'');
+    if(fileName==='actualites.json') return String(embedded.actualitesJson||'');
+    if(fileName==='fiches_labo.json') return String(embedded.fichesJson||'');
+    return '';
+}
+
+async function fetchRowsFromUrl(url){
+    const embeddedText=getEmbeddedSourceText(url);
+    const canUseEmbedded=Boolean(embeddedText);
+    const useEmbeddedFirst=location.protocol==='file:' && canUseEmbedded;
+    if(useEmbeddedFirst){
+        const isCsv=/output=csv|\.csv(\?|$)/i.test(url);
+        if(isCsv) return parseCSV(embeddedText).rows;
+        try{
+            return asArray(JSON.parse(embeddedText));
+        }catch{
+            const parsed=parseCSV(embeddedText);
+            if(parsed.headers.length) return parsed.rows;
+        }
+    }
+    try{
+        const text=await fetchTextWithTimeout(url);
+        const isCsv=/output=csv|\.csv(\?|$)/i.test(url);
+        if(isCsv) return parseCSV(text).rows;
+        try{
+            return asArray(JSON.parse(text));
+        }catch{
+            const parsed=parseCSV(text);
+            if(parsed.headers.length) return parsed.rows;
+            throw new Error(lang==='fr'?'Format non reconnu (utilisez un lien CSV Google Sheets publié)':'Unsupported format (use a published Google Sheets CSV link)');
+        }
+    }catch(err){
+        if(canUseEmbedded){
+            const isCsv=/output=csv|\.csv(\?|$)/i.test(url);
+            if(isCsv) return parseCSV(embeddedText).rows;
+            try{
+                return asArray(JSON.parse(embeddedText));
+            }catch{
+                const parsed=parseCSV(embeddedText);
+                if(parsed.headers.length) return parsed.rows;
+            }
+        }
+        throw err;
+    }
+}
+
+function formatHumanDate(value){
+    const raw=String(value||'').trim();
+    if(!raw) return '—';
+    if(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(raw)) return raw;
+    if(/^\d{4}-\d{2}-\d{2}$/.test(raw)){
+        const [yy,mm,dd]=raw.split('-').map((v)=>Number(v));
+        const parsedIso=new Date(Date.UTC(yy,mm-1,dd));
+        return parsedIso.toLocaleDateString(lang==='fr'?'fr-FR':'en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'});
+    }
+    const parsed=new Date(raw);
+    if(Number.isNaN(parsed.getTime())) return raw;
+    return parsed.toLocaleDateString(lang==='fr'?'fr-FR':'en-US',{year:'numeric',month:'short',day:'numeric'});
+}
+
+function normalizeExternalUrl(value){
+    const raw=String(value||'').trim();
+    if(!raw) return '';
+    if(/^(https?:\/\/|mailto:|tel:)/i.test(raw)) return raw;
+    if(/^www\./i.test(raw)) return `https://${raw}`;
+    return raw;
+}
+
+function normalizeNewsImageUrl(value){
+    const raw=String(value||'').trim();
+    if(!raw) return '';
+    const fileMatch=raw.match(/drive\.google\.com\/file\/d\/([^/]+)/i);
+    if(fileMatch && fileMatch[1]){
+        return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(fileMatch[1])}`;
+    }
+    const openMatch=raw.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if(/drive\.google\.com/i.test(raw) && openMatch && openMatch[1]){
+        return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(openMatch[1])}`;
+    }
+    const gstaticMatch=raw.match(/lh3\.googleusercontent\.com\/.+/i);
+    if(gstaticMatch) return raw;
+    return raw;
+}
+
+function normalizeActualiteRow(row){
+    return{
+        date:rowGet(row,'date','published_at','date_publication'),
+        title:rowGet(row,'title','titre','nom'),
+        summary:rowGet(row,'summary','resume','description'),
+        content:rowGet(row,'content','contenu','article','body','texte'),
+        url:normalizeExternalUrl(rowGet(row,'url','link','lien')),
+        category:rowGet(row,'category','categorie'),
+        image:rowGet(row,'image','photo','image_url','image url','img','thumbnail')
+    };
+}
+
+function normalizeFicheRow(row){
+    return{
+        title:rowGet(row,'title','titre','nom'),
+        category:rowGet(row,'category','categorie','type'),
+        summary:rowGet(row,'summary','resume','description'),
+        url:rowGet(row,'url','link','lien'),
+        download:rowGet(row,'download_url','download','telechargement','fichier'),
+        updated_at:rowGet(row,'updated_at','date','date_maj','mise_a_jour')
+    };
+}
+
+function supabasePublicPdfUrl(path){
+    const cleanPath=String(path||'').replace(/^\/+/,'').trim();
+    if(!cleanPath || !SUPABASE_URL || !SUPABASE_FICHES_BUCKET) return '';
+    return `${SUPABASE_URL}/storage/v1/object/public/${encodeURIComponent(SUPABASE_FICHES_BUCKET)}/${cleanPath}`;
+}
+
+function readCachedSupabaseFiches(){
+    const raw=safeLocalStorageGet(SUPABASE_FICHES_CACHE_KEY);
+    if(!raw) return [];
+    try{
+        const parsed=JSON.parse(raw);
+        const ts=Number(parsed?.ts||0);
+        const rows=Array.isArray(parsed?.rows) ? parsed.rows : [];
+        if(!ts || (Date.now()-ts)>SUPABASE_FICHES_CACHE_TTL_MS) return [];
+        return rows;
+    }catch{
+        return [];
+    }
+}
+
+function writeCachedSupabaseFiches(rows){
+    if(!Array.isArray(rows)) return;
+    safeLocalStorageSet(SUPABASE_FICHES_CACHE_KEY,JSON.stringify({ts:Date.now(),rows}));
+}
+
+async function fetchFichesFromSupabase(){
+    if(!SUPABASE_URL.trim() || !SUPABASE_PUBLISHABLE_KEY.trim()){
+        throw new Error('Supabase non configuré');
+    }
+    const table=encodeURIComponent(SUPABASE_FICHES_TABLE);
+    const select='select=*';
+    const filters='published=eq.true&order=updated_at.desc.nullslast';
+    const url=`${SUPABASE_URL}/rest/v1/${table}?${select}&${filters}`;
+    const controller=typeof AbortController!=='undefined' ? new AbortController() : null;
+    const timer=controller ? setTimeout(()=>controller.abort(),FETCH_TIMEOUT_MS) : null;
+    let response;
+    try{
+        response=await fetch(cacheBust(url),{
+            cache:'no-store',
+            headers:{
+                apikey:SUPABASE_PUBLISHABLE_KEY,
+                Authorization:`Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+            },
+            signal:controller ? controller.signal : undefined
+        });
+    }catch(err){
+        if(err && err.name==='AbortError') throw new Error('Supabase timeout');
+        throw err;
+    }finally{
+        if(timer) clearTimeout(timer);
+    }
+    if(!response.ok) throw new Error(`Supabase HTTP ${response.status}`);
+    const rows=await response.json();
+    if(!Array.isArray(rows)) return [];
+    return rows.map((row)=>{
+        const normalized=normalizeFicheRow(row);
+        const directDownload=String(row.download_url||row.download||'').trim();
+        const directUrl=String(row.url||'').trim();
+        const pdfPath=String(row.pdf_path||'').trim();
+        if(!normalized.download){
+            if(directDownload){
+                normalized.download=directDownload;
+            }else if(pdfPath){
+                normalized.download=supabasePublicPdfUrl(pdfPath);
+            }else if(directUrl && isPdfUrl(directUrl)){
+                normalized.download=directUrl;
+            }
+        }
+        if(!normalized.url && directUrl && !isPdfUrl(directUrl)){
+            normalized.url=directUrl;
+        }
+        return normalized;
+    }).filter((item)=>item.title);
+}
+
+function labelFromPdfPath(filePath){
+    const name=String(filePath||'').split('/').pop()||'';
+    const withoutExt=name.replace(/\.pdf$/i,'');
+    return withoutExt
+        .replace(/[_-]+/g,' ')
+        .replace(/\s+/g,' ')
+        .trim();
+}
+
+function parsePdfFileName(fileName){
+    const withoutExt=fileName.replace(/\.pdf$/i,'');
+    const parts=withoutExt.split('__');
+    const title=(parts[0]||'').trim();
+    const summary=(parts[1]||'').trim();
+    const category=(parts[2]||'').trim();
+    return {title,summary,category};
+}
+
+async function fetchFichesFromSupabaseStorage(){
+    if(!SUPABASE_URL.trim() || !SUPABASE_PUBLISHABLE_KEY.trim()){
+        throw new Error('Supabase non configuré');
+    }
+    const listUrl=`${SUPABASE_URL}/storage/v1/object/list/${encodeURIComponent(SUPABASE_FICHES_BUCKET)}`;
+    const response=await fetch(cacheBust(listUrl),{
+        method:'POST',
+        cache:'no-store',
+        headers:{
+            'Content-Type':'application/json',
+            apikey:SUPABASE_PUBLISHABLE_KEY,
+            Authorization:`Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+        },
+        body:JSON.stringify({
+            prefix:SUPABASE_FICHES_LIST_PREFIX,
+            limit:1000,
+            offset:0,
+            sortBy:{column:'updated_at',order:'desc'}
+        })
+    });
+    if(!response.ok) throw new Error(`Supabase storage HTTP ${response.status}`);
+    const rows=await response.json();
+    if(!Array.isArray(rows)) return [];
+    return rows
+        .filter((row)=>String(row?.name||'').toLowerCase().endsWith('.pdf'))
+        .map((row)=>{
+            const fileName=String(row.name||'').trim();
+            const filePath=SUPABASE_FICHES_LIST_PREFIX ? `${SUPABASE_FICHES_LIST_PREFIX.replace(/\/+$/,'')}/${fileName}` : fileName;
+            const parsed=parsePdfFileName(fileName);
+            return {
+                title:parsed.title || labelFromPdfPath(filePath) || fileName,
+                category:parsed.category || 'Fiche Labo',
+                summary:parsed.summary || '',
+                url:'',
+                download:supabasePublicPdfUrl(filePath),
+                updated_at:String(row.updated_at||'').slice(0,10)
+            };
+        })
+        .filter((item)=>item.download);
+}
+
+async function loadActualites(){
+    const newsGrid=document.getElementById('newsGrid');
+    newsLoaded=false;
+    if(newsGrid) newsGrid.innerHTML=`<div class="loading">${t('news.loading')}</div>`;
+    const localSource=FALLBACK_ACTUALITES_URL.trim();
+    const remoteSource=ACTUALITES_URL.trim();
+    let loaded=false;
+    if(localSource){
+        try{
+            const rows=await fetchRowsFromUrl(localSource);
+            ACTUALITES_DATA=rows.map(normalizeActualiteRow).filter((item)=>item.title);
+            ACTUALITES_DATA.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+            newsLoaded=true;
+            renderActualites();
+            renderHomeNews();
+            loaded=true;
+        }catch(err){
+            console.warn(`Actualites source error (${localSource}): ${errorMessage(err)}`);
+        }
+    }
+    if(remoteSource && remoteSource!==localSource){
+        try{
+            const rows=await fetchRowsFromUrl(remoteSource);
+            ACTUALITES_DATA=rows.map(normalizeActualiteRow).filter((item)=>item.title);
+            ACTUALITES_DATA.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+            newsLoaded=true;
+            renderActualites();
+            renderHomeNews();
+            return;
+        }catch(err){
+            console.warn(`Actualites source error (${remoteSource}): ${errorMessage(err)}`);
+        }
+    }
+    if(loaded) return;
+    ACTUALITES_DATA=[];
+    newsLoaded=true;
+    renderActualites();
+    renderHomeNews();
+}
+
+function renderActualites(){
+    const grid=document.getElementById('newsGrid');
+    if(!grid) return;
+    if(!newsLoaded){
+        grid.innerHTML=`<div class="loading">${t('news.loading')}</div>`;
+        return;
+    }
+    const q=normalizeText(newsQuery);
+    const items=ACTUALITES_DATA.filter((item)=>{
+        if(!q) return true;
+        return [item.title,item.summary,item.content,item.category,item.date].some((v)=>normalizeText(v).includes(q));
+    });
+    CURRENT_NEWS_ITEMS=items;
+    if(!items.length){
+        grid.innerHTML=`<div class="news-empty">${t('news.empty')}</div>`;
+        return;
+    }
+    grid.innerHTML=items.map((item,idx)=>{
+        const cat=item.category?`<span class="resource-badge">${escapeHtml(item.category)}</span>`:'';
+        const dateLabel=t('news.updatedDate',{date:formatHumanDate(item.date)});
+        const canOpen=Boolean(item.url || item.content || item.summary);
+        const link=canOpen?`<button type="button" class="news-link news-link-btn" data-news-idx="${idx}">${t('news.readMore')}</button>`:'';
+        const imageUrl=normalizeNewsImageUrl(item.image);
+        const imageBlock=imageUrl?`<div class="news-cover"><img src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`:'';
+        return `<article class="news-card">
+            ${imageBlock}
+            <div class="resource-top">${cat}<span class="news-date">${escapeHtml(dateLabel)}</span></div>
+            <h3 class="news-title">${escapeHtml(item.title)}</h3>
+            <p class="news-summary">${escapeHtml(item.summary||'')}</p>
+            ${link}
+        </article>`;
+    }).join('');
+    grid.querySelectorAll('.news-link-btn').forEach((btn)=>{
+        btn.onclick=()=>{
+            const idx=Number(btn.dataset.newsIdx);
+            openNewsDialogByIndex(idx);
+        };
+    });
+}
+
+function renderHomeNews(){
+    const track=document.getElementById('homeNewsTrack');
+    if(!track) return;
+    if(!newsLoaded){
+        track.innerHTML=`<div class="loading">${t('news.loading')}</div>`;
+        updateHomeNewsArrows();
+        return;
+    }
+    const items=ACTUALITES_DATA.slice(0,12);
+    if(!items.length){
+        track.innerHTML=`<div class="home-news-empty">${t('home.news.empty')}</div>`;
+        updateHomeNewsArrows();
+        return;
+    }
+    track.innerHTML=items.map((item,idx)=>{
+        const date=formatHumanDate(item.date);
+        return `<article class="home-news-card" data-home-news-idx="${idx}">
+            <h4 class="home-news-card-title">${escapeHtml(item.title||'')}</h4>
+            <div class="home-news-card-date">${escapeHtml(date)}</div>
+        </article>`;
+    }).join('');
+    track.querySelectorAll('.home-news-card').forEach((card)=>{
+        card.onclick=()=>{
+            const idx=Number(card.dataset.homeNewsIdx);
+            const item=items[idx];
+            if(item) openNewsDialog(item);
+        };
+    });
+    updateHomeNewsArrows();
+}
+
+function getHomeNewsScrollStep(){
+    const viewport=document.getElementById('homeNewsViewport');
+    const first=document.querySelector('#homeNewsTrack .home-news-card');
+    if(!viewport || !first) return 320;
+    const styles=window.getComputedStyle(first);
+    const cardWidth=first.getBoundingClientRect().width;
+    const marginRight=Number.parseFloat(styles.marginRight||'0')||0;
+    return cardWidth+marginRight+14;
+}
+
+function scrollHomeNews(direction){
+    const viewport=document.getElementById('homeNewsViewport');
+    if(!viewport) return;
+    const step=getHomeNewsScrollStep();
+    viewport.scrollBy({left:direction*step,behavior:'smooth'});
+    setTimeout(updateHomeNewsArrows,220);
+}
+
+function updateHomeNewsArrows(){
+    const viewport=document.getElementById('homeNewsViewport');
+    const prev=document.getElementById('homeNewsPrev');
+    const next=document.getElementById('homeNewsNext');
+    if(!viewport || !prev || !next) return;
+    const canScroll=viewport.scrollWidth-viewport.clientWidth>4;
+    prev.disabled=!canScroll || viewport.scrollLeft<=2;
+    next.disabled=!canScroll || (viewport.scrollLeft+viewport.clientWidth)>=viewport.scrollWidth-2;
+}
+
+function openNewsDialogByIndex(idx){
+    const item=CURRENT_NEWS_ITEMS[idx];
+    if(!item) return;
+    openNewsDialog(item);
+}
+
+function openFicheDialogByIndex(idx){
+    const item=CURRENT_FICHES_ITEMS[idx];
+    if(!item) return;
+    openFicheDialog(item);
+}
+
+function openNewsDialog(item,opts={}){
+    const {fromHistory=false}=opts;
+    const root=document.getElementById('newsDialog');
+    const titleEl=document.getElementById('newsDialogTitle');
+    const metaEl=document.getElementById('newsDialogMeta');
+    const bodyEl=document.getElementById('newsDialogBody');
+    const sourceEl=document.getElementById('newsDialogSource');
+    const imageEl=document.getElementById('newsDialogImage');
+    if(!root || !titleEl || !metaEl || !bodyEl || !sourceEl || !imageEl) return;
+    titleEl.textContent=item.title || '';
+    const formattedDate=formatHumanDate(item.date);
+    metaEl.textContent=`${item.category||''}${item.category&&formattedDate!=='—'?' • ':''}${formattedDate!=='—'?formattedDate:''}`;
+    const content=item.content || item.summary || '';
+    bodyEl.innerHTML=escapeHtml(String(content||'')).replace(/\n/g,'<br>');
+    const imageUrl=normalizeNewsImageUrl(item.image);
+    if(imageUrl){
+        imageEl.style.display='block';
+        imageEl.innerHTML=`<img src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'">`;
+    }else{
+        imageEl.style.display='none';
+        imageEl.innerHTML='';
+    }
+    if(item.url){
+        sourceEl.href=item.url;
+        sourceEl.textContent=t('news.openSource');
+        sourceEl.style.display='inline-flex';
+    }else{
+        sourceEl.removeAttribute('href');
+        sourceEl.style.display='none';
+    }
+    root.classList.add('open');
+    document.body.style.overflow='hidden';
+    if(!fromHistory){
+        const state={page:currentPage,newsOpen:true,newsKey:getNewsKey(item)};
+        history.pushState(state,'');
+    }
+}
+
+function closeNewsDialog(opts={}){
+    const {fromHistory=false}=opts;
+    const root=document.getElementById('newsDialog');
+    if(!root) return;
+    if(!root.classList.contains('open')) return;
+    if(!fromHistory && history.state && history.state.newsOpen){
+        history.back();
+        return;
+    }
+    root.classList.remove('open');
+    if(!document.getElementById('overlay')?.classList.contains('open')){
+        document.body.style.overflow='';
+    }
+}
+
+function openFicheDialog(item){
+    const pdfUrl=fichePdfUrl(item);
+    if(!pdfUrl) return;
+    const root=document.getElementById('ficheDialog');
+    const titleEl=document.getElementById('ficheDialogTitle');
+    const metaEl=document.getElementById('ficheDialogMeta');
+    const summaryEl=document.getElementById('ficheDialogSummary');
+    const frameEl=document.getElementById('ficheDialogFrame');
+    const openTabEl=document.getElementById('ficheDialogOpenTab');
+    const downloadEl=document.getElementById('ficheDialogDownload');
+    if(!root || !titleEl || !metaEl || !summaryEl || !frameEl || !openTabEl || !downloadEl) return;
+
+    titleEl.textContent=item.title || '';
+    const metaParts=[];
+    if(item.category) metaParts.push(String(item.category));
+    if(item.updated_at) metaParts.push(t('fiches.updated',{date:formatHumanDate(item.updated_at)}));
+    metaEl.textContent=metaParts.join(' • ');
+
+    const summary=String(item.summary||'').trim();
+    if(summary){
+        summaryEl.style.display='block';
+        summaryEl.textContent=summary;
+    }else{
+        summaryEl.style.display='none';
+        summaryEl.textContent='';
+    }
+
+    // Basic PDF embed. Users still have open-in-new-tab and download as fallback.
+    frameEl.innerHTML=`<iframe src="${escapeHtml(pdfUrl)}" title="${escapeHtml(item.title||'PDF')}" loading="lazy"></iframe>`;
+
+    openTabEl.href=pdfUrl;
+    openTabEl.textContent=t('fiches.openTab');
+    openTabEl.style.display='inline-flex';
+
+    downloadEl.href=pdfUrl;
+    downloadEl.textContent=t('fiches.download');
+    downloadEl.style.display='inline-flex';
+
+    root.classList.add('open');
+    document.body.style.overflow='hidden';
+}
+
+function closeFicheDialog(){
+    const root=document.getElementById('ficheDialog');
+    if(!root) return;
+    if(!root.classList.contains('open')) return;
+    root.classList.remove('open');
+
+    const frameEl=document.getElementById('ficheDialogFrame');
+    if(frameEl) frameEl.innerHTML='';
+    const openTabEl=document.getElementById('ficheDialogOpenTab');
+    if(openTabEl){
+        openTabEl.removeAttribute('href');
+        openTabEl.style.display='none';
+        openTabEl.textContent='';
+    }
+    const downloadEl=document.getElementById('ficheDialogDownload');
+    if(downloadEl){
+        downloadEl.removeAttribute('href');
+        downloadEl.style.display='none';
+        downloadEl.textContent='';
+    }
+    const summaryEl=document.getElementById('ficheDialogSummary');
+    if(summaryEl){
+        summaryEl.style.display='none';
+        summaryEl.textContent='';
+    }
+
+    if(!document.getElementById('overlay')?.classList.contains('open') && !document.getElementById('newsDialog')?.classList.contains('open')){
+        document.body.style.overflow='';
+    }
+}
+
+async function loadFiches(){
+    const fichesGrid=document.getElementById('fichesGrid');
+    fichesLoaded=false;
+    if(fichesGrid) fichesGrid.innerHTML=`<div class="loading">${t('fiches.loading')}</div>`;
+    if(USE_SUPABASE_FICHES){
+        let renderedFromCache=false;
+        const cached=readCachedSupabaseFiches();
+        if(cached.length){
+            FICHES_DATA=cached;
+            fichesLoaded=true;
+            buildFichesCategories();
+            renderFiches();
+            renderedFromCache=true;
+        }
+        try{
+            const freshRows=await fetchFichesFromSupabase();
+            let mergedRows=freshRows;
+            if(!mergedRows.length){
+                mergedRows=await fetchFichesFromSupabaseStorage();
+            }
+            FICHES_DATA=mergedRows;
+            writeCachedSupabaseFiches(mergedRows);
+            fichesLoaded=true;
+            buildFichesCategories();
+            renderFiches();
+            return;
+        }catch(err){
+            console.warn(`Fiches source error (supabase): ${errorMessage(err)}`);
+            try{
+                const storageRows=await fetchFichesFromSupabaseStorage();
+                if(storageRows.length){
+                    FICHES_DATA=storageRows;
+                    writeCachedSupabaseFiches(storageRows);
+                    fichesLoaded=true;
+                    buildFichesCategories();
+                    renderFiches();
+                    return;
+                }
+            }catch(storageErr){
+                console.warn(`Fiches source error (supabase storage): ${errorMessage(storageErr)}`);
+            }
+            if(renderedFromCache) return;
+        }
+    }
+    const localSource=FALLBACK_FICHES_LABO_URL.trim();
+    const remoteSource=FICHES_LABO_URL.trim();
+    let loaded=false;
+    if(localSource){
+        try{
+            const rows=await fetchRowsFromUrl(localSource);
+            FICHES_DATA=rows.map(normalizeFicheRow).filter((item)=>item.title);
+            fichesLoaded=true;
+            buildFichesCategories();
+            renderFiches();
+            loaded=true;
+        }catch(err){
+            console.warn(`Fiches source error (${localSource}): ${errorMessage(err)}`);
+        }
+    }
+    if(remoteSource && remoteSource!==localSource){
+        try{
+            const rows=await fetchRowsFromUrl(remoteSource);
+            FICHES_DATA=rows.map(normalizeFicheRow).filter((item)=>item.title);
+            fichesLoaded=true;
+            buildFichesCategories();
+            renderFiches();
+            return;
+        }catch(err){
+            console.warn(`Fiches source error (${remoteSource}): ${errorMessage(err)}`);
+        }
+    }
+    if(loaded) return;
+    FICHES_DATA=[];
+    fichesLoaded=true;
+    buildFichesCategories();
+    renderFiches();
+}
+
+function buildFichesCategories(){
+    const el=document.getElementById('fichesCats');
+    if(!el) return;
+    const categories=[...new Set(FICHES_DATA.map((item)=>item.category).filter(Boolean))].sort();
+    el.innerHTML=`<button class="resource-cat ${fichesCategory==='all'?'on':''}" data-cat="all">${t('fiches.cat.all')}</button>`+
+        categories.map((category)=>`<button class="resource-cat ${fichesCategory===category?'on':''}" data-cat="${escapeHtml(category)}">${escapeHtml(category)}</button>`).join('');
+    el.querySelectorAll('.resource-cat').forEach((btn)=>{
+        btn.onclick=()=>{
+            fichesCategory=btn.dataset.cat||'all';
+            buildFichesCategories();
+            renderFiches();
+        };
+    });
+}
+
+function isPdfUrl(value){
+    return /\.pdf(\?|#|$)/i.test(String(value||'').trim());
+}
+
+function fichePdfUrl(item){
+    if(!item) return '';
+    if(item.download && isPdfUrl(item.download)) return String(item.download).trim();
+    if(item.url && isPdfUrl(item.url)) return String(item.url).trim();
+    return '';
+}
+
+function renderFiches(){
+    const grid=document.getElementById('fichesGrid');
+    if(!grid) return;
+    if(!fichesLoaded){
+        grid.innerHTML=`<div class="loading">${t('fiches.loading')}</div>`;
+        return;
+    }
+    const q=normalizeText(fichesQuery);
+    const items=FICHES_DATA.filter((item)=>{
+        const byCat=fichesCategory==='all' || item.category===fichesCategory;
+        if(!byCat) return false;
+        if(!q) return true;
+        return [item.title,item.summary,item.category,item.updated_at].some((v)=>normalizeText(v).includes(q));
+    });
+    CURRENT_FICHES_ITEMS=items;
+    if(!items.length){
+        grid.innerHTML=`<div class="news-empty">${t('fiches.empty')}</div>`;
+        return;
+    }
+    grid.innerHTML=items.map((item,idx)=>{
+        const category=item.category?`<span class="resource-badge">${escapeHtml(item.category)}</span>`:'';
+        const updated=item.updated_at?`<span class="resource-updated">${escapeHtml(t('fiches.updated',{date:formatHumanDate(item.updated_at)}))}</span>`:'';
+        const pdfUrl=fichePdfUrl(item);
+        const previewBtn=pdfUrl?`<button type="button" class="resource-btn primary fiche-preview-btn" data-fiche-idx="${idx}">${t('fiches.preview')}</button>`:'';
+        const openTabBtn=pdfUrl?`<a class="resource-btn" href="${escapeHtml(pdfUrl)}" target="_blank" rel="noopener noreferrer">${t('fiches.openTab')}</a>`:'';
+        const openPageBtn=(item.url && !isPdfUrl(item.url))?`<a class="resource-btn ${pdfUrl?'':'primary'}" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${t('fiches.open')}</a>`:'';
+        const downloadHref=String(item.download||pdfUrl||'').trim();
+        const downloadBtn=downloadHref?`<a class="resource-btn" href="${escapeHtml(downloadHref)}" target="_blank" rel="noopener noreferrer">${t('fiches.download')}</a>`:'';
+        const primaryAction=pdfUrl?previewBtn:(openPageBtn||`<span class="resource-btn disabled">${t('fiches.soon')}</span>`);
+        const secondaryActions=pdfUrl?`${openTabBtn}${downloadBtn}${openPageBtn}`:`${downloadBtn}`;
+        return `<article class="resource-card">
+            <div class="resource-top">${category}${updated}</div>
+            <h3 class="resource-title">${escapeHtml(item.title)}</h3>
+            <p class="resource-summary">${escapeHtml(item.summary||'')}</p>
+            <div class="resource-actions">${primaryAction}${secondaryActions}</div>
+        </article>`;
+    }).join('');
+    grid.querySelectorAll('.fiche-preview-btn').forEach((btn)=>{
+        btn.onclick=()=>{
+            const idx=Number(btn.dataset.ficheIdx);
+            openFicheDialogByIndex(idx);
+        };
+    });
+}
+
+let DATA=[],filter='all',query='',currentView='patient';
+const IC={
+    clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>',
+    doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>',
+    vol:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+};
+
+function buildChips(){
+    const ds=[...new Set(DATA.map(a=>a.departement))].sort(),el=document.getElementById('chips');
+    el.innerHTML=`<div class="chip on" data-f="all">${t('chip.all')} (${DATA.length})</div>`+ds.map(d=>`<div class="chip" data-f="${d}">${departmentLabel(d)} (${DATA.filter(a=>a.departement===d).length})</div>`).join('');
+    el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{setFilterValue(c.dataset.f);render()});
+}
+
+function showGridLoading(message=t('grid.loading')){
+    const g=document.getElementById('grid');
+    if(g) g.innerHTML=`<div class="loading">${message}</div>`;
+}
+
+function showLoadError(message,details=''){
+    const localHint = location.protocol === 'file:' ? t('grid.localHint') : '';
+    const g=document.getElementById('grid');
+    if(!g) return;
+    g.innerHTML=
+        `<div class="empty"><h3>${t('grid.loadErrorTitle')}</h3>
+        <p>${message}</p>
+        ${localHint ? `<p style="margin-top:8px;font-size:12px;color:#aaa">${localHint}</p>` : ''}
+        ${details ? `<p style="margin-top:8px;font-size:12px;color:#aaa">${escapeHtml(details)}</p>` : ''}
+        </div>`;
+}
+
+function missingRequiredColumns(headers){
+    const hs=new Set(headers.map(normalizeHeader));
+    return MIN_REQUIRED_COLUMNS.filter(col=>!hs.has(col));
+}
+
+function normalizeDepartement(value){
+    const raw=String(value||'').trim();
+    const norm=normalizeText(raw);
+    const map={
+        'chimie':'Chimie',
+        'hematologie':'Hématologie',
+        'hématologie':'Hématologie',
+        'microbiologie':'Microbiologie',
+        'immunologie':'Immunologie',
+        'hormonologie':'Hormonologie',
+    };
+    return map[norm] || (raw ? raw : 'Autre');
+}
+
+function normalizeTubeColor(value){
+    const norm=normalizeText(value);
+    if(!norm) return 'gris';
+    const v=norm.replace(/\s+/g,'');
+    return KNOWN_TUBE_COLORS.includes(v) ? v : 'gris';
+}
+
+function normalizeRow(row){
+    const out={...row};
+    OPTIONAL_COLUMNS.forEach(k=>{ if(!(k in out)) out[k]=''; });
+    out.departement = normalizeDepartement(out.departement);
+    if(!KNOWN_DEPARTEMENTS.includes(out.departement)) out.departement='Autre';
+    out.couleur_tube = normalizeTubeColor(out.couleur_tube);
+    return out;
+}
+
+async function fetchAnalyses(url,label){
+    const text=await fetchTextWithTimeout(url);
+    const parsed=parseCSV(text);
+    if(!parsed.headers.length) throw new Error(lang==='fr'?'En-têtes CSV introuvables':'CSV headers not found');
+    const missing=missingRequiredColumns(parsed.headers);
+    if(missing.length) throw new Error(`${lang==='fr'?'Colonnes manquantes':'Missing columns'}: ${missing.join(', ')}`);
+    if(!parsed.rows.length) throw new Error(lang==='fr'?'Aucune analyse trouvée dans la source':'No tests found in data source');
+    return{rows:parsed.rows.map(normalizeRow),label};
+}
+
+async function loadAnalyses(){
+    showGridLoading(t('grid.loading'));
+    const localSource={url:FALLBACK_ANALYSES_URL,label:t('source.local'),key:'local'};
+    const remoteSource={url:ANALYSES_URL,label:t('source.google'),key:'google'};
+    let loaded=false;
+    let lastError='';
+
+    if(localSource.url.trim()){
+        try{
+            const localLoaded=await fetchAnalyses(localSource.url,localSource.label);
+            DATA=localLoaded.rows;
+            activeSourceKey=localSource.key;
+            dataReady=true;
+            buildChips();
+            syncQueryInputs();
+            render();
+            loaded=true;
+        }catch(err){
+            lastError=`${localSource.label}: ${errorMessage(err)}`;
+            console.warn(lastError);
+        }
+    }
+
+    if(remoteSource.url.trim() && remoteSource.url.trim()!==localSource.url.trim()){
+        try{
+            const remoteLoaded=await fetchAnalyses(remoteSource.url,remoteSource.label);
+            DATA=remoteLoaded.rows;
+            activeSourceKey=remoteSource.key;
+            dataReady=true;
+            buildChips();
+            syncQueryInputs();
+            render();
+            return;
+        }catch(err){
+            lastError=`${remoteSource.label}: ${errorMessage(err)}`;
+            console.warn(lastError);
+        }
+    }else if(!loaded && remoteSource.url.trim()){
+        try{
+            const remoteLoaded=await fetchAnalyses(remoteSource.url,remoteSource.label);
+            DATA=remoteLoaded.rows;
+            activeSourceKey=remoteSource.key;
+            dataReady=true;
+            buildChips();
+            syncQueryInputs();
+            render();
+            return;
+        }catch(err){
+            lastError=`${remoteSource.label}: ${errorMessage(err)}`;
+            console.warn(lastError);
+        }
+    }
+
+    if(!loaded){
+        showLoadError(t('grid.loadErrorMessage'),lastError);
+    }
+}
+
+function list(){
+    const q=normalizeText(query);
+    return DATA.filter(a=>{
+        if(filter!=='all'&&a.departement!==filter)return false;
+        if(!q)return true;
+        return Object.values(a).some(v=>normalizeText(v).includes(q));
+    });
+}
+
+function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+}
+
+function normalizeText(value){
+    return String(value||'')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g,'')
+        .trim();
+}
+
+function truncateText(value,max=280){
+    const text=String(value||'').trim();
+    if(text.length<=max) return text;
+    return text.slice(0,max-1).trimEnd()+'…';
+}
+
+const TUBE_COLORS={
+    'rouge':'#d32f2f','violet':'#7b1fa2','bleu':'#1565c0','vert':'#2e7d32',
+    'gris':'#757575','jaune':'#f9a825','orange':'#ef6c00'
+};
+const CONTAINER_ICONS={
+    'pot-urines':'#f9a825','pot-selles':'#8d6e63','pot-crachats':'#78909c',
+    'ecouvillon':'#546e7a','flacon-hemoculture':'#5d4037'
+};
+function tubeInlineSvg(f,s){
+    const sz=s==='lg'?{w:60,h:150}:{w:36,h:90};
+    const name=(f||'').replace(/\.[^.]+$/,'');
+    const isTube=name.startsWith('tube-');
+    const color=isTube?TUBE_COLORS[name.replace('tube-','')]||'#999':CONTAINER_ICONS[name]||'#999';
+    if(isTube){
+        return `<svg viewBox="0 0 60 150" width="${sz.w}" height="${sz.h}"><rect x="13" y="8" width="34" height="24" rx="3" fill="${color}" stroke="${color}" stroke-width=".5" opacity=".9"/><rect x="13" y="30" width="34" height="100" rx="6" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/><rect x="16" y="90" width="28" height="36" rx="4" fill="${color}" opacity=".18"/></svg>`;
+    }
+    const isPot=name.startsWith('pot-');
+    if(isPot){
+        return `<svg viewBox="0 0 60 150" width="${sz.w}" height="${sz.h}"><rect x="10" y="15" width="40" height="16" rx="3" fill="${color}"/><rect x="8" y="30" width="44" height="100" rx="8" fill="#f5f5f5" stroke="#ccc" stroke-width="1"/><rect x="12" y="90" width="36" height="36" rx="6" fill="${color}" opacity=".15"/></svg>`;
+    }
+    return `<svg viewBox="0 0 60 150" width="${sz.w}" height="${sz.h}"><line x1="30" y1="10" x2="30" y2="80" stroke="${color}" stroke-width="3" stroke-linecap="round"/><circle cx="30" cy="90" r="8" fill="#f5f5f5" stroke="#ccc"/><ellipse cx="30" cy="15" rx="12" ry="4" fill="${color}" opacity=".3"/></svg>`;
+}
+function ph(f,s){
+    if(!f)return s==='lg'?'<span class="no-ph-lg"></span>':'<span class="no-ph"></span>';
+    return tubeInlineSvg(f,s);
+}
+
+function render(){
+    const items=list(),g=document.getElementById('grid');
+    const analysisWord=items.length>1?t('topbar.analysis.other'):t('topbar.analysis.one');
+    const sourceLabel=activeSourceKey?t(`source.${activeSourceKey}`):'';
+    document.getElementById('topbar').innerHTML=`<span><b>${items.length}</b> ${analysisWord}</span>${sourceLabel?`<span style="margin-left:12px;color:#95a4a8">${t('topbar.source')}: ${escapeHtml(sourceLabel)}</span>`:''}`;
+    if(!items.length){g.innerHTML=`<div class="empty"><h3>${t('grid.emptyTitle')}</h3><p>${t('grid.emptyDesc')}</p></div>`;return}
+    g.innerHTML=items.map(a=>`
+        <div class="card" onclick="openModal(${DATA.indexOf(a)})">
+            <div class="card-photo">${ph(a.photo,'sm')}</div>
+            <div class="card-body">
+                <span class="tag tag-${a.departement}">${departmentLabel(a.departement)}</span>
+                <div class="card-top"><span class="card-title">${a.nom}</span><span class="card-code">${a.code}</span></div>
+                <div class="card-info">
+                    <div class="info"><div class="dot dot-${a.couleur_tube}"></div>${a.tube}</div>
+                    <div class="info">${IC.clock}<b>${a.delai}</b></div>
+                    <div class="info">${IC.doc}${a.echantillon}</div>
+                    <div class="info">${IC.vol}${a.volume}</div>
+                </div>
+            </div>
+        </div>`).join('');
+}
+
+/* ── Modal ── */
+function setView(v){
+    currentView=v;
+    document.getElementById('btnPatient').classList.toggle('active',v==='patient');
+    document.getElementById('btnMedecin').classList.toggle('active',v==='medecin');
+    document.getElementById('vPatient').classList.toggle('show',v==='patient');
+    document.getElementById('vMedecin').classList.toggle('show',v==='medecin');
+}
+
+function openModal(i){
+    const a=DATA[i];
+    activeModalIndex=i;
+    document.getElementById('mTag').innerHTML=`<span class="tag tag-${a.departement}">${departmentLabel(a.departement)}</span>`;
+    document.getElementById('mTitle').textContent=a.nom;
+    document.getElementById('mPhoto').innerHTML=ph(a.photo,'lg');
+    const bcDept=document.getElementById('bcDept');
+    const bcName=document.getElementById('bcName');
+    if(bcDept) bcDept.textContent=departmentLabel(a.departement);
+    if(bcName) bcName.textContent=a.code;
+
+    // Patient view
+    document.getElementById('pvName').textContent=a.nom_patient||a.nom;
+    const jeune=a.jeune||'';
+    const jEl=document.getElementById('pvJeune');
+    if(jeune.toLowerCase().startsWith('oui') || jeune.toLowerCase().startsWith('yes')){
+        const suffix=jeune.replace(/^(oui|yes)\s*/i,'').replace(/^[\-–—:]\s*/,'').replace(/^\(/,'').replace(/\)$/,'').trim();
+        jEl.textContent=suffix?`${t('modal.fasting.yes')} ${suffix}`:t('modal.fasting.yes');
+        jEl.className='pv-card-value yes';
+    } else {
+        jEl.textContent=t('modal.fasting.no');
+        jEl.className='pv-card-value no';
+    }
+    document.getElementById('pvDelai').textContent=a.delai||'—';
+
+    // Patient note (conditions simplifiées)
+    const noteEl=document.getElementById('pvNote');
+    const conditionsNorm=normalizeText(a.conditions);
+    if(a.conditions && !conditionsNorm.includes('pas de conditions') && !conditionsNorm.includes('no special condition') && !conditionsNorm.includes('no specific condition')){
+        noteEl.style.display='block';
+        noteEl.innerHTML=`<b>💡 ${t('modal.note.prefix')}</b> `+a.conditions;
+    } else {
+        noteEl.style.display='none';
+    }
+
+    // Medecin view
+    const rows=[
+        [t('modal.field.code'),a.code,'mono'],[t('modal.field.sample'),a.echantillon],[t('modal.field.tube'),a.tube],[t('modal.field.volume'),a.volume],
+        [t('modal.field.conditions'),a.conditions,'',1],[t('modal.field.storage'),a.conservation,'',1],
+        [t('modal.field.delay'),a.delai],[t('modal.field.method'),a.methode],
+        [t('modal.field.reference'),a.valeurs_ref,'',1],[t('modal.field.interest'),a.interet,'',1],[t('modal.field.remarks'),a.remarques,'',1]
+    ];
+    document.getElementById('mFields').innerHTML=rows.filter(r=>r[1]).map(([l,v,cls,w])=>
+        `<div class="field${w?' wide':''}"><div class="field-label">${l}</div><div class="field-value${cls?' '+cls:''}">${v}</div></div>`
+    ).join('');
+
+    setView('patient');
+    document.getElementById('overlay').classList.add('open');
+    document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+    document.getElementById('overlay').classList.remove('open');
+    if(!document.getElementById('newsDialog')?.classList.contains('open') && !document.getElementById('ficheDialog')?.classList.contains('open')){
+        document.body.style.overflow='';
+    }
+    activeModalIndex=-1;
+}
+document.getElementById('overlay').onclick=e=>{if(e.target===e.currentTarget)closeModal()};
+document.getElementById('newsDialog').onclick=e=>{if(e.target===e.currentTarget)closeNewsDialog()};
+document.getElementById('ficheDialog').onclick=e=>{if(e.target===e.currentTarget)closeFicheDialog()};
+document.onkeydown=e=>{if(e.key==='Escape'){closeModal();closeNewsDialog();closeFicheDialog();}};
+window.addEventListener('popstate',(event)=>{
+    applyHistoryState(event.state||null);
+});
+function debounce(fn,ms){let t;return function(...a){clearTimeout(t);t=setTimeout(()=>fn.apply(this,a),ms);};}
+const debouncedRender=debounce(()=>{if(dataReady)render();},150);
+const debouncedRenderActualites=debounce(()=>renderActualites(),150);
+const debouncedRenderFiches=debounce(()=>renderFiches(),150);
+document.getElementById('q').oninput=e=>{setQueryState(e.target.value);syncQueryInputs();debouncedRender();};
+const compendiumHomeSearchEl=document.getElementById('compendiumHomeSearch');
+if(compendiumHomeSearchEl){
+    compendiumHomeSearchEl.oninput=(e)=>{
+        setQueryState(e.target.value);
+        syncQueryInputs();
+        if(currentPage==='compendium') debouncedRender();
+    };
+}
+
+document.querySelectorAll('.quick-action').forEach((btn)=>{
+    btn.onclick=()=>{
+        const target=btn.dataset.pageTarget;
+        if(target) showPage(target);
+    };
+});
+document.querySelectorAll('.lang-btn').forEach((btn)=>{
+    btn.onclick=()=>setLanguage(btn.dataset.lang||'fr');
+});
+const newsSearchInput=document.getElementById('newsSearch');
+if(newsSearchInput){
+    newsSearchInput.oninput=(e)=>{
+        newsQuery=String(e.target.value||'').trim();
+        debouncedRenderActualites();
+    };
+}
+const homeNewsPrevBtn=document.getElementById('homeNewsPrev');
+if(homeNewsPrevBtn){
+    homeNewsPrevBtn.onclick=()=>scrollHomeNews(-1);
+}
+const homeNewsNextBtn=document.getElementById('homeNewsNext');
+if(homeNewsNextBtn){
+    homeNewsNextBtn.onclick=()=>scrollHomeNews(1);
+}
+const homeNewsViewportEl=document.getElementById('homeNewsViewport');
+if(homeNewsViewportEl){
+    homeNewsViewportEl.addEventListener('scroll',updateHomeNewsArrows,{passive:true});
+}
+window.addEventListener('resize',updateHomeNewsArrows);
+const fichesSearchInput=document.getElementById('fichesSearch');
+if(fichesSearchInput){
+    fichesSearchInput.oninput=(e)=>{
+        fichesQuery=String(e.target.value||'').trim();
+        debouncedRenderFiches();
+    };
+}
+
+/* ── Google Reviews ── */
+function reviewStars(value){
+    const score=Math.max(0,Math.min(5,Number(value)||0));
+    const full='★'.repeat(Math.round(score));
+    const empty='☆'.repeat(Math.max(0,5-Math.round(score)));
+    return `${full}${empty}`;
+}
+
+function setupReviewLinks(){
+    const allBtn=document.getElementById('allReviewsBtn');
+    const writeBtn=document.getElementById('writeReviewBtn');
+    const embed=document.getElementById('reviewsEmbed');
+    if(allBtn) allBtn.href = GOOGLE_REVIEWS_FALLBACK_URL;
+    if(writeBtn){
+        writeBtn.href = GOOGLE_PLACE_ID
+            ? `https://search.google.com/local/writereview?placeid=${encodeURIComponent(GOOGLE_PLACE_ID)}`
+            : GOOGLE_REVIEWS_FALLBACK_URL;
+    }
+    if(embed) embed.src = GOOGLE_REVIEWS_EMBED_URL;
+}
+
+function renderReviewsState(summary,state,cardsHtml=''){
+    const summaryEl=document.getElementById('reviewsSummary');
+    const stateEl=document.getElementById('reviewsState');
+    const listEl=document.getElementById('googleReviews');
+    if(summaryEl) summaryEl.textContent=summary;
+    if(stateEl) stateEl.textContent=state;
+    if(listEl) listEl.innerHTML=cardsHtml;
+}
+
+function renderReviewsCards(reviews){
+    return reviews.map((r)=>{
+        const author=escapeHtml(r.author_name||t('reviews.author.default'));
+        const text=escapeHtml(truncateText(r.text||''));
+        const when=escapeHtml(r.relative_time_description||t('reviews.time.default'));
+        const stars=reviewStars(r.rating);
+        return `<article class="review-card">
+            <div class="review-top">
+                <div class="review-author">${author}</div>
+                <div class="review-stars">${stars}</div>
+            </div>
+            <div class="review-time">${when}</div>
+            <p class="review-text">${text||t('reviews.text.default')}</p>
+        </article>`;
+    }).join('');
+}
+
+async function loadGoogleReviews(){
+    setupReviewLinks();
+    if(!GOOGLE_REVIEWS_API_URL){
+        renderReviewsState(
+            t('reviews.summary.default'),
+            t('reviews.state.embed'),
+            ''
+        );
+        return;
+    }
+    renderReviewsState(t('reviews.summary.live'),t('reviews.state.loading'),'');
+    try{
+        const response=await fetch(cacheBust(GOOGLE_REVIEWS_API_URL),{cache:'no-store'});
+        if(!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload=await response.json();
+        const rating=Number(payload?.rating||0);
+        const total=Number(payload?.total||0);
+        const reviews=Array.isArray(payload?.reviews) ? payload.reviews.slice(0,6) : [];
+        if(!reviews.length){
+            renderReviewsState(
+                t('reviews.count.short',{rating:(rating ? rating.toFixed(1)+'/5' : '—'),total}),
+                t('reviews.state.empty'),
+                ''
+            );
+            return;
+        }
+        renderReviewsState(
+            t('reviews.count',{rating:(rating ? rating.toFixed(1)+'/5' : '—'),total}),
+            t('reviews.state.auto'),
+            renderReviewsCards(reviews)
+        );
+    }catch(err){
+        renderReviewsState(
+            t('reviews.summary.unavailable'),
+            t('reviews.state.error',{error:err.message}),
+            ''
+        );
+    }
+}
+
+/* ── Dark Mode ── */
+function setTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    safeLocalStorageSet('camc_theme',t);
+    const sun=document.getElementById('themeIconSun');
+    const moon=document.getElementById('themeIconMoon');
+    if(sun) sun.style.display=t==='dark'?'none':'block';
+    if(moon) moon.style.display=t==='dark'?'block':'none';
+}
+const savedTheme=safeLocalStorageGet('camc_theme')||'light';
+setTheme(savedTheme);
+const themeToggleBtn=document.getElementById('themeToggle');
+if(themeToggleBtn){
+    themeToggleBtn.onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+
+/* ── Back to Top ── */
+const backTopBtn=document.getElementById('backTop');
+if(backTopBtn){
+    window.addEventListener('scroll',()=>{
+        backTopBtn.classList.toggle('show',window.scrollY>400);
+    },{passive:true});
+}
+
+/* ── PDF Fullscreen ── */
+function togglePdfFullscreen(){
+    const frame=document.getElementById('ficheDialogFrame');
+    if(!frame) return;
+    frame.classList.toggle('fullscreen');
+    const btn=document.getElementById('pdfFsBtn');
+    if(btn) btn.textContent=frame.classList.contains('fullscreen')?'Quitter plein écran':'Plein écran';
+}
+document.addEventListener('keydown',(e)=>{
+    if(e.key==='Escape'){
+        const frame=document.getElementById('ficheDialogFrame');
+        if(frame && frame.classList.contains('fullscreen')){
+            frame.classList.remove('fullscreen');
+            e.stopImmediatePropagation();
+        }
+    }
+},true);
+
+/* ── Load ── */
+runSafe('initNavigationState',()=>initNavigationState());
+runSafe('setLanguage',()=>setLanguage(preferredLang));
+void Promise.all([
+    runSafeAsync('loadAnalyses',()=>loadAnalyses()),
+    runSafeAsync('loadActualites',()=>loadActualites()),
+    runSafeAsync('loadFiches',()=>loadFiches())
+]);
+if(GOOGLE_REVIEWS_API_URL){
+    setInterval(()=>{ void runSafeAsync('loadGoogleReviews.interval',()=>loadGoogleReviews()); },GOOGLE_REVIEWS_REFRESH_MS);
+}
+
+/* ══════════ SCROLL REVEAL ANIMATIONS ══════════ */
+(function(){
+    const revealObs=new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target)}});
+    },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+})();
+</script>
+</body>
+</html>

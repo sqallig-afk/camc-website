@@ -1,0 +1,75 @@
+{
+  "patients": [
+    {
+      "id": "pat_001",
+      "full_name": "Nadia El Idrissi",
+      "dossier": "CAMC-2026-0001",
+      "phone": "0612345678",
+      "birth_date": "1990-04-15"
+    },
+    {
+      "id": "pat_002",
+      "full_name": "Youssef Bennis",
+      "dossier": "CAMC-2026-0002",
+      "phone": "0623456789",
+      "birth_date": "1986-10-03"
+    }
+  ],
+  "biologists": [
+    {
+      "id": "bio_001",
+      "display_name": "Dr. CAMC",
+      "username": "biologiste",
+      "password": "ChangeMe-2026"
+    }
+  ],
+  "protocols": [
+    {
+      "id": "prot_001",
+      "patient_id": "pat_001",
+      "title": "Profil lipidique",
+      "status": "open",
+      "collected_at": "2026-03-05",
+      "pdf_url": "https://example.ma/docs/profil-lipidique.pdf",
+      "updated_at": "2026-03-06T08:50:00.000Z"
+    },
+    {
+      "id": "prot_002",
+      "patient_id": "pat_001",
+      "title": "HbA1c",
+      "status": "answered",
+      "collected_at": "2026-03-01",
+      "pdf_url": "https://example.ma/docs/hba1c.pdf",
+      "updated_at": "2026-03-06T08:20:00.000Z"
+    },
+    {
+      "id": "prot_003",
+      "patient_id": "pat_002",
+      "title": "NFS",
+      "status": "open",
+      "collected_at": "2026-03-04",
+      "pdf_url": "https://example.ma/docs/nfs.pdf",
+      "updated_at": "2026-03-06T08:40:00.000Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg_001",
+      "protocol_id": "prot_002",
+      "author_role": "patient",
+      "author_id": "pat_001",
+      "author_name": "Nadia El Idrissi",
+      "body": "Dois-je refaire ce test dans 3 mois ?",
+      "created_at": "2026-03-06T08:10:00.000Z"
+    },
+    {
+      "id": "msg_002",
+      "protocol_id": "prot_002",
+      "author_role": "biologist",
+      "author_id": "bio_001",
+      "author_name": "Dr. CAMC",
+      "body": "Oui, un controle a 3 mois est recommande selon votre medecin traitant.",
+      "created_at": "2026-03-06T08:20:00.000Z"
+    }
+  ]
+}

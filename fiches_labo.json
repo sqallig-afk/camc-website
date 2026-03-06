@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Fiche Medecin - v29_n03_548",
+    "category": "Medecin",
+    "summary": "Fiche PDF ajoutee localement pour apercu en modal et telechargement.",
+    "url": "",
+    "download": "docs/v29_n03_548.pdf",
+    "updated_at": "2026-03-05"
+  },
+  {
+    "title": "ISO 15189 - Politique Qualite",
+    "category": "Qualite",
+    "summary": "Presentation synthétique de l'engagement CAMC sur la qualite et la competence technique.",
+    "url": "",
+    "download": "",
+    "updated_at": "2026-03-03"
+  },
+  {
+    "title": "Manuel de Prelevement",
+    "category": "Prelevement",
+    "summary": "Consignes pratiques avant, pendant et apres le prelevement pour les examens courants.",
+    "url": "",
+    "download": "",
+    "updated_at": "2026-03-03"
+  },
+  {
+    "title": "Guide Tubes et Conditions",
+    "category": "Technique",
+    "summary": "Correspondance tube, echantillon et contraintes pre-analytiques pour limiter les non-conformites.",
+    "url": "",
+    "download": "",
+    "updated_at": "2026-03-03"
+  }
+]
