@@ -267,6 +267,8 @@
         .home-news-viewport::-webkit-scrollbar{display:none}
         .home-news-track{display:flex;gap:14px}
         .home-news-card{flex:0 0 calc((100% - 28px)/3);min-width:280px;background:#fff;border:1px solid #dfe7ea;border-radius:14px;padding:16px 18px 14px;box-shadow:0 5px 12px rgba(0,0,0,.03);border-left:8px solid #0f7d65;cursor:pointer;overflow:hidden}
+        .home-news-card-cover{width:100%;height:150px;border-radius:10px;overflow:hidden;background:#eef3f5;border:1px solid #dde6e9;margin-bottom:10px}
+        .home-news-card-cover img{width:100%;height:100%;object-fit:cover;display:block}
         .home-news-card-title{font-size:clamp(18px,1.45vw,31px);line-height:1.2;color:#0f2e3c;font-weight:800;overflow-wrap:anywhere;word-break:break-word;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
         .home-news-card-date{margin-top:8px;color:#8a9096;font-size:clamp(14px,1.1vw,25px);font-weight:600}
         .home-news-empty{padding:20px;border:1px dashed #c8d7dd;border-radius:12px;color:#5f747b;background:#f9fbfc}
@@ -451,9 +453,7 @@
         .info{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-mid)}
         .info svg{width:12px;height:12px;opacity:.4;flex-shrink:0}
         .info b{font-weight:600}
-        .dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
-        .dot-rouge{background:#d63031}.dot-violet{background:#8e44ad}.dot-bleu{background:#2e86de}
-        .dot-vert{background:#27ae60}.dot-gris{background:#95a5a6}.dot-jaune{background:#f0c929}.dot-orange{background:#e67e22}
+        .info .tube-icon{width:10px;height:22px;opacity:1;flex-shrink:0;align-self:center}
 
         /* ══════ MODAL ══════ */
         .overlay{display:none;position:fixed;inset:0;padding:1vh .5vw;background:rgba(0,0,0,.45);z-index:300;backdrop-filter:blur(3px);place-items:center}
@@ -2056,6 +2056,16 @@ function normalizeExternalUrl(value){
 function normalizeNewsImageUrl(value){
     const raw=String(value||'').trim();
     if(!raw) return '';
+    const plainFile=/^[^/?#]+\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i;
+    if(plainFile.test(raw)){
+        return `photos/${encodeURIComponent(raw).replace(/%2F/gi,'/')}`;
+    }
+    if(/^\.?\/*photos\//i.test(raw)){
+        return raw.replace(/^\.?\/*/,'');
+    }
+    if(/^(\/|\.\/|\.\.\/)/.test(raw)){
+        return raw;
+    }
     const fileMatch=raw.match(/drive\.google\.com\/file\/d\/([^/]+)/i);
     if(fileMatch && fileMatch[1]){
         return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(fileMatch[1])}`;
@@ -2077,7 +2087,29 @@ function normalizeActualiteRow(row){
         content:rowGet(row,'content','contenu','article','body','texte'),
         url:normalizeExternalUrl(rowGet(row,'url','link','lien')),
         category:rowGet(row,'category','categorie'),
-        image:rowGet(row,'image','photo','image_url','image url','img','thumbnail')
+        image:rowGet(
+            row,
+            'image',
+            'photo',
+            'image_url',
+            'image url',
+            'img',
+            'thumbnail',
+            'miniature',
+            'thumbnail_url',
+            'cover',
+            'cover_image',
+            'image principale',
+            'image_principale',
+            'image de couverture',
+            'cover photo',
+            'illustration',
+            'visuel',
+            'image_article',
+            'image article',
+            'photo_url',
+            'photo url'
+        )
     };
 }
 
@@ -2322,7 +2354,12 @@ function renderHomeNews(){
     }
     track.innerHTML=items.map((item,idx)=>{
         const date=formatHumanDate(item.date);
+        const imageUrl=normalizeNewsImageUrl(item.image);
+        const imageBlock=imageUrl
+            ? `<div class="home-news-card-cover"><img src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`
+            : '';
         return `<article class="home-news-card" data-home-news-idx="${idx}">
+            ${imageBlock}
             <h4 class="home-news-card-title">${escapeHtml(item.title||'')}</h4>
             <div class="home-news-card-date">${escapeHtml(date)}</div>
         </article>`;
@@ -2708,6 +2745,24 @@ function normalizeTubeColor(value){
     return KNOWN_TUBE_COLORS.includes(v) ? v : 'gris';
 }
 
+const TUBE_CAP_COLORS={rouge:'#d63031',violet:'#8e44ad',bleu:'#2e86de',vert:'#27ae60',gris:'#95a5a6',jaune:'#f0c929',orange:'#e67e22'};
+
+function tubeHasGel(tubeName){
+    const n=(tubeName||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    return n.includes('gel')||n.includes('sst')||n.includes('separateur')||n.includes('separator');
+}
+
+function tubeIcon(couleur,hasGel){
+    const cap=TUBE_CAP_COLORS[couleur]||'#95a5a6';
+    const gelLayer=hasGel?`<rect x="1.5" y="14" width="7" height="5" rx="1.5" fill="#d4820a" opacity="0.75"/>`:'';
+    return `<svg class="tube-icon" viewBox="0 0 10 22" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="5" width="8" height="15" rx="2" fill="#eef0f4" stroke="#c0c5cf" stroke-width="0.7"/>
+      ${gelLayer}
+      <rect x="0" y="0" width="10" height="7" rx="2.5" fill="${cap}"/>
+      <rect x="1.5" y="1" width="3.5" height="1.5" rx="0.75" fill="rgba(255,255,255,0.4)"/>
+    </svg>`;
+}
+
 function normalizeRow(row){
     const out={...row};
     OPTIONAL_COLUMNS.forEach(k=>{ if(!(k in out)) out[k]=''; });
@@ -2852,7 +2907,7 @@ function render(){
                 <span class="tag tag-${a.departement}">${departmentLabel(a.departement)}</span>
                 <div class="card-top"><span class="card-title">${a.nom}</span><span class="card-code">${a.code}</span></div>
                 <div class="card-info">
-                    <div class="info"><div class="dot dot-${a.couleur_tube}"></div>${a.tube}</div>
+                    <div class="info">${tubeIcon(a.couleur_tube,tubeHasGel(a.tube))}${a.tube}</div>
                     <div class="info">${IC.clock}<b>${a.delai}</b></div>
                     <div class="info">${IC.doc}${a.echantillon}</div>
                     <div class="info">${IC.vol}${a.volume}</div>
