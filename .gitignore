@@ -1,3 +1,17 @@
 *.xlsx
 node_modules/
 .DS_Store
+.pycache/
+__pycache__/
+*.pyc
+*.pyo
+scripts/
+docs/
+dist/
+portail-resultats/
+*_scraped_*.csv
+*_seed_*.csv
+*_template.csv
+*_minimal_*.csv
+data.inline.js
+rename_helper.txt
