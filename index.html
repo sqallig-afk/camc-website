@@ -332,6 +332,9 @@
         .news-card{background:#fff;border:1px solid #dfe7ea;border-radius:14px;padding:14px;box-shadow:0 5px 12px rgba(0,0,0,.03);display:flex;flex-direction:column;gap:8px}
         .news-cover{width:100%;height:170px;border-radius:10px;overflow:hidden;background:#eef3f5;border:1px solid #dde6e9}
         .news-cover img{width:100%;height:100%;object-fit:cover;display:block}
+        .news-cover.is-broken,.home-news-card-cover.is-broken,.news-dialog-image.is-broken{display:flex;align-items:center;justify-content:center;background:#f6f9fb;border-style:dashed;color:#5c7180}
+        .news-cover.is-broken img,.home-news-card-cover.is-broken img,.news-dialog-image.is-broken img{display:none}
+        .news-cover.is-broken::after,.home-news-card-cover.is-broken::after,.news-dialog-image.is-broken::after{content:'Image indisponible';font-size:12px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
         .news-date{font-size:12px;color:#6e8086;font-weight:700}
         .news-title{font-size:18px;line-height:1.2;color:#1d4f62;font-weight:800}
         .news-summary{font-size:14px;line-height:1.45;color:#52666d;flex:1;overflow-wrap:anywhere;word-break:break-word}
@@ -1005,8 +1008,9 @@
         <h3 class="home-title" style="text-align:center">Rechercher par analyse</h3>
         <div class="home-input-wrap comp-search-wrap">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <input type="text" class="home-search-input" id="compendiumHomeSearch" placeholder="Rechercher une analyse (ex: CRP)" onkeydown="if(event.key==='Enter'){openCompendiumWithQuery(this.value)}">
+            <input type="text" class="home-search-input" id="compendiumHomeSearch" placeholder="Rechercher une analyse (ex: CRP)">
         </div>
+        <div class="chips" id="chips" style="max-width:700px;margin:10px auto 0;justify-content:center"></div>
 
         <h3 class="home-title">Informations pratiques</h3>
         <div class="practical-grid">
@@ -1124,18 +1128,6 @@
             <div class="reviews-embed">
                 <iframe id="reviewsEmbed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Avis Google CAMC"></iframe>
             </div>
-        </div>
-    </div>
-    <div class="search-bar">
-        <div class="search-inner">
-            <div class="search-field">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="text" id="q" placeholder="Rechercher une analyse (nom, code, tube, mot-clé clinique…)">
-            </div>
-            <div class="chips" id="chips"></div>
-        </div>
-        <div class="compendium-tools">
-            <button type="button" class="back-home-btn" onclick="showPage('home')">← Retour à l'accueil</button>
         </div>
     </div>
     <div class="topbar" id="topbar"></div>
@@ -1908,7 +1900,7 @@ function openCompendiumWithQuery(v){
     }else{
         showGridLoading(t('grid.loading'));
     }
-    setTimeout(()=>document.getElementById('q')?.focus(),50);
+    setTimeout(()=>document.getElementById('compendiumHomeSearch')?.focus(),50);
 }
 
 function openCompendiumWithFilter(v){
@@ -2056,6 +2048,15 @@ function normalizeExternalUrl(value){
 function normalizeNewsImageUrl(value){
     const raw=String(value||'').trim();
     if(!raw) return '';
+    const vecteezyMatch=raw.match(/vecteezy\.com\/photo\/(\d+)-([a-z0-9-]+)/i);
+    if(vecteezyMatch){
+        const idChunk=String(vecteezyMatch[1]||'').padStart(9,'0').slice(-9);
+        const folder=`${idChunk.slice(0,3)}/${idChunk.slice(3,6)}/${idChunk.slice(6,9)}`;
+        const slug=String(vecteezyMatch[2]||'').replace(/-+/g,'-').replace(/^-|-$/g,'');
+        if(slug){
+            return `https://static.vecteezy.com/system/resources/previews/${folder}/large_2x/${slug}-free-photo.jpg`;
+        }
+    }
     const plainFile=/^[^/?#]+\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i;
     if(plainFile.test(raw)){
         return `photos/${encodeURIComponent(raw).replace(/%2F/gi,'/')}`;
@@ -2321,7 +2322,7 @@ function renderActualites(){
         const canOpen=Boolean(item.url || item.content || item.summary);
         const link=canOpen?`<button type="button" class="news-link news-link-btn" data-news-idx="${idx}">${t('news.readMore')}</button>`:'';
         const imageUrl=normalizeNewsImageUrl(item.image);
-        const imageBlock=imageUrl?`<div class="news-cover"><img src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`:'';
+        const imageBlock=imageUrl?`<div class="news-cover"><img src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add('is-broken')"></div>`:'';
         return `<article class="news-card">
             ${imageBlock}
             <div class="resource-top">${cat}<span class="news-date">${escapeHtml(dateLabel)}</span></div>
@@ -2356,7 +2357,7 @@ function renderHomeNews(){
         const date=formatHumanDate(item.date);
         const imageUrl=normalizeNewsImageUrl(item.image);
         const imageBlock=imageUrl
-            ? `<div class="home-news-card-cover"><img src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`
+            ? `<div class="home-news-card-cover"><img src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add('is-broken')"></div>`
             : '';
         return `<article class="home-news-card" data-home-news-idx="${idx}">
             ${imageBlock}
@@ -2431,9 +2432,11 @@ function openNewsDialog(item,opts={}){
     const imageUrl=normalizeNewsImageUrl(item.image);
     if(imageUrl){
         imageEl.style.display='block';
-        imageEl.innerHTML=`<img src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'">`;
+        imageEl.classList.remove('is-broken');
+        imageEl.innerHTML=`<img src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add('is-broken')">`;
     }else{
         imageEl.style.display='none';
+        imageEl.classList.remove('is-broken');
         imageEl.innerHTML='';
     }
     if(item.url){
@@ -2894,14 +2897,8 @@ function ph(f,s){
     return tubeInlineSvg(f,s);
 }
 
-function render(){
-    const items=list(),g=document.getElementById('grid');
-    const analysisWord=items.length>1?t('topbar.analysis.other'):t('topbar.analysis.one');
-    const sourceLabel=activeSourceKey?t(`source.${activeSourceKey}`):'';
-    document.getElementById('topbar').innerHTML=`<span><b>${items.length}</b> ${analysisWord}</span>${sourceLabel?`<span style="margin-left:12px;color:#95a4a8">${t('topbar.source')}: ${escapeHtml(sourceLabel)}</span>`:''}`;
-    if(!items.length){g.innerHTML=`<div class="empty"><h3>${t('grid.emptyTitle')}</h3><p>${t('grid.emptyDesc')}</p></div>`;return}
-    g.innerHTML=items.map(a=>`
-        <div class="card" onclick="openModal(${DATA.indexOf(a)})">
+function renderCard(a){
+    return `<div class="card" onclick="openModal(${DATA.indexOf(a)})">
             <div class="card-photo">${ph(a.photo,'sm')}</div>
             <div class="card-body">
                 <span class="tag tag-${a.departement}">${departmentLabel(a.departement)}</span>
@@ -2913,7 +2910,30 @@ function render(){
                     <div class="info">${IC.vol}${a.volume}</div>
                 </div>
             </div>
-        </div>`).join('');
+        </div>`;
+}
+
+function render(){
+    const g=document.getElementById('grid');
+    const hasQuery=query.trim().length>0||filter!=='all';
+    if(!hasQuery){
+        const preview=DATA.slice(0,2);
+        document.getElementById('topbar').innerHTML=`<span><b>${DATA.length}</b> analyses disponibles</span>`;
+        g.innerHTML=preview.map(a=>renderCard(a)).join('')+
+            `<div class="card" style="display:flex;align-items:center;justify-content:center;min-height:120px;opacity:.6;cursor:default;pointer-events:none">
+                <div style="text-align:center;color:var(--text-mid)">
+                    <div style="font-size:32px;font-weight:300;letter-spacing:4px">…</div>
+                    <div style="font-size:13px;margin-top:6px">Recherchez parmi les ${DATA.length} analyses</div>
+                </div>
+            </div>`;
+        return;
+    }
+    const items=list();
+    const analysisWord=items.length>1?t('topbar.analysis.other'):t('topbar.analysis.one');
+    const sourceLabel=activeSourceKey?t(`source.${activeSourceKey}`):'';
+    document.getElementById('topbar').innerHTML=`<span><b>${items.length}</b> ${analysisWord}</span>${sourceLabel?`<span style="margin-left:12px;color:#95a4a8">${t('topbar.source')}: ${escapeHtml(sourceLabel)}</span>`:''}`;
+    if(!items.length){g.innerHTML=`<div class="empty"><h3>${t('grid.emptyTitle')}</h3><p>${t('grid.emptyDesc')}</p></div>`;return}
+    g.innerHTML=items.map(a=>renderCard(a)).join('');
 }
 
 /* ── Modal ── */
@@ -2994,7 +3014,7 @@ function debounce(fn,ms){let t;return function(...a){clearTimeout(t);t=setTimeou
 const debouncedRender=debounce(()=>{if(dataReady)render();},150);
 const debouncedRenderActualites=debounce(()=>renderActualites(),150);
 const debouncedRenderFiches=debounce(()=>renderFiches(),150);
-document.getElementById('q').oninput=e=>{setQueryState(e.target.value);syncQueryInputs();debouncedRender();};
+const qEl=document.getElementById('q');if(qEl)qEl.oninput=e=>{setQueryState(e.target.value);syncQueryInputs();debouncedRender();};
 const compendiumHomeSearchEl=document.getElementById('compendiumHomeSearch');
 if(compendiumHomeSearchEl){
     compendiumHomeSearchEl.oninput=(e)=>{
