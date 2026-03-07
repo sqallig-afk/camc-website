@@ -1010,7 +1010,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             <input type="text" class="home-search-input" id="compendiumHomeSearch" placeholder="Rechercher une analyse (ex: CRP)">
         </div>
-        <div class="chips" id="chips" style="max-width:700px;margin:10px auto 0;justify-content:center"></div>
+        <div class="topbar" id="topbar" style="max-width:700px;margin:10px auto 0;padding:0"></div>
+        <div class="grid" id="grid" style="max-width:700px;margin:12px auto 0"><div class="loading">Chargement des analyses…</div></div>
 
         <h3 class="home-title">Informations pratiques</h3>
         <div class="practical-grid">
@@ -1130,8 +1131,6 @@
             </div>
         </div>
     </div>
-    <div class="topbar" id="topbar"></div>
-    <div class="grid" id="grid"><div class="loading">Chargement des analyses…</div></div>
 </section>
 
 <!-- ═══════════════ MODAL DÉTAIL ═══════════════ -->
@@ -2699,11 +2698,7 @@ const IC={
     vol:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
 };
 
-function buildChips(){
-    const ds=[...new Set(DATA.map(a=>a.departement))].sort(),el=document.getElementById('chips');
-    el.innerHTML=`<div class="chip on" data-f="all">${t('chip.all')} (${DATA.length})</div>`+ds.map(d=>`<div class="chip" data-f="${d}">${departmentLabel(d)} (${DATA.filter(a=>a.departement===d).length})</div>`).join('');
-    el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{setFilterValue(c.dataset.f);render()});
-}
+function buildChips(){}
 
 function showGridLoading(message=t('grid.loading')){
     const g=document.getElementById('grid');
@@ -2918,7 +2913,7 @@ function render(){
     const hasQuery=query.trim().length>0||filter!=='all';
     if(!hasQuery){
         const preview=DATA.slice(0,2);
-        document.getElementById('topbar').innerHTML=`<span><b>${DATA.length}</b> analyses disponibles</span>`;
+        document.getElementById('topbar').innerHTML='';
         g.innerHTML=preview.map(a=>renderCard(a)).join('')+
             `<div class="card" style="display:flex;align-items:center;justify-content:center;min-height:120px;opacity:.6;cursor:default;pointer-events:none">
                 <div style="text-align:center;color:var(--text-mid)">
