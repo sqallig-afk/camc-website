@@ -567,7 +567,7 @@
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
 <!-- ═══════════════ NAVBAR ═══════════════ -->
 <nav class="nav">
@@ -3203,6 +3203,21 @@ if(GOOGLE_REVIEWS_API_URL){
         entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target)}});
     },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
     document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+})();
+
+/* ══════════ ANTI-SCRAPING ══════════ */
+(function(){
+    // Bloquer Ctrl+U (view source), Ctrl+Shift+I (DevTools), F12
+    document.addEventListener('keydown',function(e){
+        if(e.key==='F12') e.preventDefault();
+        if(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C')) e.preventDefault();
+        if(e.ctrlKey&&e.key==='u') e.preventDefault();
+        if(e.ctrlKey&&e.key==='s') e.preventDefault();
+    });
+    // Bloquer le glisser-deposer des images
+    document.querySelectorAll('img').forEach(function(img){
+        img.setAttribute('draggable','false');
+    });
 })();
 </script>
 </body>

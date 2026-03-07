@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /data/
+Disallow: /assets/
+Allow: /
+
+Sitemap: https://camc-anfa.com/sitemap.xml
